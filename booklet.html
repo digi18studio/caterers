@@ -1,0 +1,2974 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Udaipur Caterers — Menu Selection System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Cormorant+Garamond:wght@500;600;700&family=Marcellus+SC&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<!-- html2pdf.js CDN library for high-quality client-side PDF export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" 
+        integrity="sha512-GsLlZN/3F2ErC5Cc1WRYToPdHZ+Aac74bfmHzRlQsapqiWeZOip3vF5e9V9gdIyejh5TFCuVZqWnm3MXspcQmw==" 
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/data.js"></script>
+
+<style>
+  :root{
+    --rose:#B85C74;
+    --rose-deep:#7C3A4C;
+    --gold:#D8A24B;
+    --gold-light:#EFCB8B;
+    --cream:#FBF1E9;
+    --ivory:#FFFDFB;
+    --pinklight:#F5D3D9;
+    --ink:#3A2A2E;
+    --muted:#93807E;
+    --line:#EFDCD9;
+    --shadow: 0 10px 30px rgba(124,58,76,0.12);
+    --radius:16px;
+    --radius-sm:10px;
+    --ok:#4C7A54;
+    --pending:#B8563F;
+  }
+  *{box-sizing:border-box;}
+  
+  /* Tilted watermark overlay for Category banner covers */
+  .image-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    color: rgba(255, 255, 255, 0.22);
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.4);
+    z-index: 5;
+  }
+  
+  .image-watermark.mini {
+    font-size: 14px;
+    letter-spacing: 1px;
+    color: rgba(255, 255, 255, 0.18);
+  }
+  
+  .section-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    color: rgba(124, 58, 76, 0.04) !important;
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    pointer-events: none;
+    user-select: none;
+    z-index: 1;
+    text-shadow: none !important;
+  }
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Poppins',sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    min-height:100vh;
+  }
+  h1,h2,h3,.display{font-family:'Playfair Display',serif;}
+  .func-name{font-family:'Playfair Display',serif;font-weight:700;}
+  .eyebrow{font-family:'Marcellus SC',serif;letter-spacing:2px;font-size:12px;color:var(--rose);text-transform:uppercase;}
+
+  /* ---------- SPLASH (Enhanced Gold/Burgundy Animated Version) ---------- */
+  #splash{
+    position:fixed;inset:0;z-index:100;
+    display:flex;align-items:center;justify-content:center;flex-direction:column;
+    overflow:hidden;
+    transition:opacity .8s ease, visibility .8s ease;
+  }
+  #splash.hide{opacity:0;visibility:hidden;pointer-events:none;}
+  .splash-bg{
+    position:absolute;inset:0;
+    background-image:url('/assets/royal_buffet_setup.png');
+    background-size:cover;background-position:center;
+    background-color:#7C3A4C;
+    filter: brightness(0.6);
+  }
+  .splash-overlay{
+    position:absolute;inset:0;
+    background: linear-gradient(180deg, rgba(124,58,76,.55) 0%, rgba(80,30,42,.75) 55%, rgba(60,20,30,.88) 100%);
+  }
+  .glass-box{
+    position:relative;z-index:2;
+    display:flex;align-items:center;justify-content:center;flex-direction:column;
+    background:rgba(124,58,76,.25);
+    border:1px solid rgba(239,203,139,.4);
+    -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+    border-radius:28px;
+    padding:44px 40px;
+    margin:20px;
+    max-width:380px;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+    text-align:center;
+  }
+  .heart{
+    position:absolute;top:-40px;color:#FCE1E7;
+    animation: fall linear infinite;
+    z-index: 1;
+    pointer-events: none;
+  }
+  @keyframes fall{
+    0%{transform:translateY(-40px) rotate(0deg);}
+    100%{transform:translateY(110vh) rotate(200deg);}
+  }
+  .splash-ring{
+    width:150px;height:150px;border-radius:50%;
+    border:1.5px solid var(--gold-light);
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:26px;
+    animation: ringPulse 2.4s ease-in-out infinite;
+    position:relative;
+  }
+  .splash-ring::before, .splash-ring::after{
+    content:'';position:absolute;inset:14px;border:1px solid rgba(239,203,139,.5);border-radius:50%;
+  }
+  @keyframes ringPulse{
+    0%,100%{box-shadow:0 0 0 0 rgba(239,203,139,.3); transform: scale(1);}
+    50%{box-shadow:0 0 0 14px rgba(239,203,139,0); transform: scale(1.03);}
+  }
+  .splash-mark{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .splash-mandala-svg {
+    width: 90px;
+    height: 90px;
+    filter: drop-shadow(0 0 8px rgba(239, 203, 139, 0.5));
+    animation: rotateMandala 20s linear infinite;
+  }
+  @keyframes rotateMandala {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  #splash h1{
+    color:var(--ivory);font-size:40px;margin:0 0 6px;letter-spacing:1px;font-weight:700;
+    font-family: 'Playfair Display', serif;
+    opacity:0; animation: riseIn 1s ease forwards .3s;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    white-space: nowrap;
+  }
+  .splash-tagline{
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    color: var(--gold-light);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 6px;
+    opacity:0; animation: riseIn 1s ease forwards .6s;
+  }
+  .splash-tagline::before, .splash-tagline::after{
+    content:"";flex-grow:1;height:1px;background:var(--gold-light);min-width:15px;
+  }
+  @keyframes riseIn{ from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
+  #splash button{
+    margin-top:34px;
+    background:linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+    border:none;
+    color:var(--rose-deep);
+    font-weight: 700;
+    font-family:'Marcellus SC',serif;letter-spacing:2px;font-size:15px;
+    padding:13px 40px;border-radius:30px;cursor:pointer;
+    opacity:0; animation: riseIn 1s ease forwards 1s;
+    transition: .25s;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  }
+  #splash button:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239, 203, 139, 0.4);
+    background: var(--ivory);
+    color: var(--rose-deep);
+  }
+
+  /* ---------- APP SHELL ---------- */
+  #app{max-width:980px;margin:0 auto;padding:100px 20px 80px;}
+  header.topbar{
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 980px;
+    box-sizing: border-box;
+    z-index: 90;
+    background: rgba(245, 239, 235, 0.95);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    margin: 0;
+    box-shadow: 0 4px 20px rgba(124, 58, 76, 0.03);
+  }
+  .brand{display:flex;align-items:center;gap:12px;}
+  .brand .mark{
+    width:44px;height:44px;border-radius:50%;background:var(--rose);
+    color:var(--ivory);display:flex;align-items:center;justify-content:center;
+    font-family:'Marcellus SC',serif;font-size:16px;
+  }
+  .brand .mark svg{width:24px;height:24px;}
+  .brand .name{font-family:'Playfair Display',serif;font-weight:700;font-size:22px;color:var(--rose-deep);}
+  .brand .loc {
+    font-family: 'Poppins', sans-serif;
+    font-size: 8.5px;
+    color: var(--gold);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 600;
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+  .brand .loc::before,
+  .brand .loc::after {
+    content: "";
+    flex-grow: 1;
+    height: 1px;
+    background: var(--gold);
+    min-width: 10px;
+  }
+
+  .lang-toggle {
+    display: flex;
+    align-items: center;
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 3px 8px;
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    color: var(--muted);
+    transition: all 0.2s;
+  }
+  .lang-toggle span {
+    color: var(--muted);
+    transition: color 0.15s;
+  }
+  .lang-toggle span.active {
+    color: var(--rose-deep);
+  }
+  .lang-toggle .sep {
+    margin: 0 4px;
+    color: var(--line);
+    font-weight: normal;
+  }
+  .lang-toggle:hover {
+    border-color: var(--rose);
+    background: #fff;
+  }
+
+  .steps{display:flex;gap:6px;}
+  .step-dot{width:9px;height:9px;border-radius:50%;background:var(--line);transition:.3s;}
+  .step-dot.active{background:var(--gold);width:22px;border-radius:5px;}
+  .step-dot.done{background:var(--rose);}
+
+  .panel{
+    background:var(--ivory);border:1px solid var(--line);border-radius:var(--radius);
+    padding:30px;box-shadow:var(--shadow);
+    animation: panelIn .4s ease;
+  }
+  .panel-split {
+    display: flex;
+    flex-direction: row;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+  .panel-left-img {
+    width: 30%;
+    margin: 24px 0 24px 24px;
+    border-radius: 16px;
+    background-image: url('/assets/Step1_image.png');
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+  .panel-right-content {
+    width: 70%;
+    padding: 24px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  @media(max-width: 768px) {
+    .panel-split {
+      flex-direction: column;
+    }
+    .panel-left-img {
+      width: calc(100% - 36px);
+      height: 180px;
+      margin: 18px 18px 0 18px;
+    }
+    .panel-right-content {
+      width: 100%;
+      padding: 16px;
+    }
+  }
+  .client-split {
+    display: flex;
+    flex-direction: row;
+    padding: 0 !important;
+    overflow: hidden;
+    background: var(--ivory);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+  }
+  .client-preview-col {
+    width: 38%;
+    background: linear-gradient(135deg, var(--rose-deep) 0%, #501E2A 100%);
+    padding: 36px 30px;
+    color: var(--ivory);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    border-top-left-radius: var(--radius);
+    border-bottom-left-radius: var(--radius);
+    overflow: hidden;
+  }
+  .client-preview-col::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 260px;
+    height: 260px;
+    border-radius: 50%;
+    background: rgba(239, 203, 139, 0.04);
+    pointer-events: none;
+  }
+  .client-form-col {
+    width: 62%;
+    padding: 36px 40px;
+  }
+  @media(max-width: 860px) {
+    .client-split {
+      flex-direction: column;
+    }
+    .client-preview-col {
+      width: 100%;
+      border-radius: 0;
+      border-top-left-radius: var(--radius);
+      border-top-right-radius: var(--radius);
+      padding: 30px 24px;
+    }
+    .client-form-col {
+      width: 100%;
+      padding: 30px 20px;
+    }
+  }
+  @keyframes panelIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+  .panel h2{margin:0 0 4px;color:var(--rose-deep);font-size:clamp(26px,4vw,34px);font-weight:700;letter-spacing:.2px;}
+  .panel .sub{color:var(--muted);font-size:13.5px;margin:0 0 24px;}
+
+  label.field{display:block;margin-bottom:16px;}
+  label.field span{display:block;font-size:12.5px;color:var(--muted);margin-bottom:6px;letter-spacing:.3px;}
+  input[type=text], input[type=number], input[type=date], select, textarea{
+    width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:var(--radius-sm);
+    background:#fff;font-family:'Poppins';font-size:14px;color:var(--ink);
+  }
+  input:focus, select:focus, textarea:focus{outline:none;border-color:var(--gold);}
+  input::placeholder, textarea::placeholder {
+    color: #b8a6a4;
+  }
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 20px;}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr;}}
+
+  .btn{
+    font-family:'Poppins';font-weight:500;font-size:14px;letter-spacing:.3px;
+    padding:12px 26px;border-radius:30px;cursor:pointer;border:1px solid var(--rose);
+    background:var(--rose);color:var(--ivory);transition:.2s;
+  }
+  .btn:hover{background:var(--rose-deep);}
+  .btn.ghost{background:transparent;color:var(--rose-deep);}
+  .btn.ghost:hover{background:rgba(184,92,116,.08);}
+  .btn.gold{background:var(--gold);border-color:var(--gold);color:#4A3210;}
+  .btn.gold:hover{background:#c28f3d;}
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+  .actions{display:flex;justify-content:space-between;margin-top:28px;}
+  .actions .right{display:flex;gap:10px;}
+
+  /* event type cards */
+  .evt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px;margin-bottom:8px;}
+  .evt-card {
+    position: relative;
+    height: 120px;
+    border-radius: 16px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: 1px solid var(--line);
+    background: var(--ivory);
+    color: var(--rose-deep);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+  }
+  .evt-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(124, 58, 76, 0.08);
+    border-color: var(--rose-deep);
+  }
+  .evt-card.sel {
+    background: var(--rose-deep);
+    color: var(--gold-light);
+    border-color: var(--gold);
+    box-shadow: 0 8px 24px rgba(124, 58, 76, 0.25);
+  }
+  .evt-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.25s ease;
+  }
+  .evt-card:hover .evt-icon {
+    transform: scale(1.1);
+  }
+  .evt-label {
+    font-weight: 600;
+    font-size: 13px;
+    line-height: 1.2;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .days-radio{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 20px;}
+  .day-pill{
+    padding:8px 14px;border-radius:20px;border:1px solid var(--line);background:#fff;font-size:13px;cursor:pointer;
+  }
+  .day-pill.sel{background:var(--rose);color:var(--ivory);border-color:var(--rose);}
+
+  /* function tabs (menu step) */
+  .func-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px;}
+  .func-tab{
+    padding:10px 18px;border-radius:20px;border:1px solid var(--line);background:#fff;
+    font-family:'Playfair Display',serif;font-weight:700;font-size:15.5px;cursor:pointer;color:var(--ink);transition:.2s;display:flex;align-items:center;gap:6px;
+  }
+  .func-tab.active{background:var(--rose);color:var(--ivory);border-color:var(--rose);}
+  .func-tab .cnt{font-size:10.5px;background:rgba(0,0,0,.12);border-radius:10px;padding:1px 6px;}
+  .func-tab.active .cnt{background:rgba(255,255,255,.25);}
+  .add-func{display:flex;gap:8px;align-items:center;margin-bottom:22px;flex-wrap:wrap;}
+  .add-func input{flex:1;min-width:140px;}
+
+  /* function card in step 2 (maroon with text inversion) */
+  .func-card {
+    border: 1px solid var(--rose-deep);
+    border-radius: var(--radius-sm);
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    background: var(--rose-deep);
+    color: var(--ivory);
+    box-shadow: 0 4px 15px rgba(124, 58, 76, 0.15);
+  }
+  .func-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .func-card-top b {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--gold-light);
+  }
+  .remove-func {
+    color: var(--gold-light);
+    font-size: 12px;
+    cursor: pointer;
+    text-decoration: underline;
+    opacity: 0.9;
+    transition: opacity 0.2s;
+  }
+  .remove-func:hover {
+    opacity: 1;
+    color: #fff;
+  }
+  .func-card-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.4fr;
+    gap: 16px;
+    align-items: start;
+  }
+  @media(max-width:700px){.func-card-grid{grid-template-columns:1fr;}}
+  .func-card-grid label.small {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.75);
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+  }
+  .func-card input[type=date], .func-card input[type=number] {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: var(--ivory);
+    border-radius: 8px;
+    padding: 9px 12px;
+  }
+  .func-card input[type=date]:focus, .func-card input[type=number]:focus {
+    border-color: var(--gold-light);
+    background: rgba(255, 255, 255, 0.12);
+  }
+  .time-checks {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .time-checks label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 6px 12px;
+    border-radius: 16px;
+    cursor: pointer;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--ivory);
+    transition: background 0.2s;
+  }
+  .time-checks label:hover {
+    background: rgba(255, 255, 255, 0.12);
+  }
+  .time-checks input {
+    width: auto;
+    accent-color: var(--gold);
+  }
+
+  /* category accordion */
+  .cat {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    margin-bottom: 14px;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 2px 6px rgba(124, 58, 76, 0.03);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .cat:hover {
+    border-color: var(--rose);
+    box-shadow: 0 4px 12px rgba(124, 58, 76, 0.06);
+  }
+  .cat-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    cursor: pointer;
+    background: #fff;
+    user-select: none;
+    transition: background-color 0.2s ease;
+  }
+  .cat-head:hover {
+    background: rgba(251, 241, 233, 0.3);
+  }
+  .cat-head .left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .cat-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--rose-deep);
+    color: var(--ivory);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--rose-deep);
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(124, 58, 76, 0.2);
+  }
+  .cat-icon svg {
+    display: block;
+  }
+  .cat-icon-svg {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) invert(1);
+    display: block;
+  }
+  .cat-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--ink);
+  }
+  .cat-count {
+    font-size: 11.5px;
+    color: var(--gold);
+    background: rgba(216,162,75,.15);
+    padding: 2px 9px;
+    border-radius: 10px;
+  }
+  .chev {
+    transition: .25s;
+    color: var(--muted);
+  }
+  .cat.open .chev {
+    transform: rotate(180deg);
+  }
+  .cat-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--cream);
+  }
+  .cat.open .cat-body {
+    max-height: 2500px;
+  }
+  .item-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+    gap: 12px;
+    padding: 16px 20px 20px;
+  }
+  .item-card {
+    background: #fff;
+    border: 1.2px solid var(--line);
+    border-radius: 20px;
+    padding: 10px 14px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    user-select: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+  }
+  .item-card:hover {
+    border-color: var(--rose);
+    background: rgba(184, 92, 116, 0.02);
+  }
+  .item-card.sel {
+    border-color: var(--rose-deep);
+    background: var(--rose-deep);
+    color: var(--ivory);
+    box-shadow: 0 4px 10px rgba(124, 58, 76, 0.15);
+  }
+  .item-name {
+    font-size: 12.5px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+  .item-card.sel .item-name {
+    color: var(--ivory);
+  }
+  .stamp {
+    position: absolute;
+    top: -5px;
+    right: -4px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--gold);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 9px;
+    border: 1.5px solid #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  .item-card.sel .stamp {
+    display: flex;
+  }
+
+  /* category hero cover */
+  .cat-hero {
+    position: relative;
+    width: 100%;
+    height: 150px;
+    overflow: hidden;
+    background: #e5e5e5;
+  }
+  .cat-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .cat.open .cat-hero-img {
+    transform: scale(1.05);
+  }
+  .cat-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(124, 58, 76, 0.85) 0%, rgba(124, 58, 76, 0.45) 50%, rgba(0,0,0,0) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 16px 20px;
+    color: var(--ivory);
+  }
+  .cat-hero-tag {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--gold-light);
+    font-weight: 600;
+    margin-bottom: 2px;
+  }
+  .cat-hero-title {
+    margin: 0;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ivory);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  }
+
+  .btn-add-more {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 10px 24px;
+    border-radius: 24px;
+    cursor: pointer;
+    border: 1.5px dashed var(--rose);
+    background: transparent;
+    color: var(--rose-deep);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    outline: none;
+  }
+  .btn-add-more:hover {
+    background: var(--rose-deep);
+    color: var(--ivory);
+    border-color: var(--rose-deep);
+    box-shadow: 0 4px 10px rgba(124, 58, 76, 0.15);
+    transform: translateY(-1px);
+  }
+  .btn-add-more:active {
+    transform: translateY(0);
+  }
+
+  /* services */
+  .svc-group{margin-bottom:26px;}
+  .svc-group h3{color:var(--rose-deep);font-size:16px;margin:0 0 4px;}
+  .svc-group .desc{font-size:12px;color:var(--muted);margin:0 0 12px;}
+  .svc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;}
+  .svc-card{background:#fff;border:1.5px solid var(--line);border-radius:12px;padding:16px 10px;text-align:center;cursor:pointer;position:relative;transition:.18s;}
+  .svc-card:hover{border-color:var(--gold-light);}
+  .svc-card.sel{border-color:var(--rose);background:var(--pinklight);}
+  .svc-emoji{font-size:28px;display:block;margin-bottom:8px;}
+  .svc-name{font-size:12px;}
+  .svc-card .stamp2{position:absolute;top:6px;right:6px;width:16px;height:16px;border-radius:50%;background:var(--rose);display:none;align-items:center;justify-content:center;color:#fff;font-size:10px;}
+  .svc-card.sel .stamp2{display:flex;}
+
+  /* summary */
+  .summary-block{margin-bottom:26px;padding-bottom:18px;border-bottom:1px dashed var(--line);}
+  .summary-block:last-child{border-bottom:none;}
+  .summary-block h3{color:var(--rose-deep);font-size:24px;font-family:'Playfair Display',serif;font-weight:700;margin:0 0 3px;}
+  .summary-block .fdate{font-size:12px;color:var(--muted);margin:0 0 12px;}
+  .sum-cat{margin-bottom:10px;}
+  .sum-cat .lbl{font-size:12px;color:var(--gold);font-weight:600;letter-spacing:.3px;text-transform:uppercase;margin-bottom:4px;}
+  .sum-tags{display:flex;flex-wrap:wrap;gap:6px;}
+  .tag{background:var(--cream);border:1px solid var(--line);border-radius:14px;padding:4px 8px 4px 11px;font-size:12px;display:inline-flex;align-items:center;gap:6px;}
+  .tag .tag-x{cursor:pointer;color:var(--pending);font-weight:600;border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;background:#fff;}
+  .tag .tag-x:hover{background:var(--pending);color:#fff;}
+  .empty-note{font-size:12.5px;color:var(--muted);font-style:italic;}
+
+  .top-summary-card{
+    background:linear-gradient(135deg, var(--rose), var(--rose-deep));
+    color:var(--ivory);border-radius:var(--radius);padding:22px 26px;margin-bottom:26px;
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px;
+  }
+  .top-summary-card .item{flex:1 1 40%;}
+  .top-summary-card .item span{display:block;font-size:11px;color:var(--gold-light);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px;}
+  .top-summary-card .item b{font-family:'Playfair Display',serif;font-size:19px;font-weight:700;}
+
+  /* thank you page */
+  .ty-hero{text-align:center;margin-bottom:28px;}
+  .ty-hero h2{font-size:32px;color:var(--rose-deep);margin:0 0 6px;}
+  .ty-hero p{color:var(--muted);font-size:14px;margin:0;}
+  .status-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-bottom:26px;}
+  .status-card{border:1px solid var(--line);border-radius:14px;padding:16px 12px;text-align:center;background:#fff;}
+  .status-card .se{font-size:24px;display:block;margin-bottom:8px;}
+  .status-card .sn{font-size:12.5px;font-weight:500;margin-bottom:8px;}
+  .badge{display:inline-block;font-size:11px;padding:3px 11px;border-radius:12px;font-weight:500;}
+  .badge.ok{background:#E7F1E5;color:var(--ok);}
+  .badge.pending{background:#FBE7E1;color:var(--pending);}
+  .wishes-box{
+    background:var(--pinklight);border-radius:var(--radius);padding:24px 28px;text-align:center;margin-bottom:26px;
+  }
+  .wishes-box .wtitle{font-family:'Playfair Display',serif;font-weight:700;font-size:25px;color:var(--rose-deep);margin:0 0 8px;}
+  .wishes-box p{margin:0;font-size:14px;color:var(--ink);}
+  .contact-block{text-align:center;margin-bottom:10px;}
+  .contact-block .cn{font-family:'Playfair Display',serif;font-weight:700;font-size:22px;color:var(--rose-deep);margin:0 0 4px;}
+  .contact-block .ca{font-size:12.5px;color:var(--muted);margin:0 0 16px;}
+  .pill-row{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:10px;}
+  .pill-btn{
+    display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:30px;font-size:13.5px;font-weight:500;
+    text-decoration:none;transition:.2s;
+  }
+  .pill-btn.wa{background:#3FA34D;color:#fff;}
+  .pill-btn.wa:hover{background:#2f8a3c;}
+  .pill-btn.call{background:#2F6FED;color:#fff;}
+  .pill-btn.call:hover{background:#1E56C7;}
+
+  .final-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:30px;}
+
+  ::-webkit-scrollbar{width:8px;}
+  ::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;}
+
+  html{-webkit-text-size-adjust:100%;}
+  body{overflow-x:hidden;}
+  input[type=text], input[type=number], input[type=date], select, textarea{font-size:16px;}
+  .btn, .day-pill, .func-tab, .pill-btn{-webkit-tap-highlight-color:transparent;}
+  .item-card, .svc-card, .evt-card, .day-pill, .func-tab, .cat-head, .btn{touch-action:manipulation;}
+
+  @media(max-width:640px){
+    #app{padding:135px 14px 60px;}
+    .panel{padding:18px 16px;}
+    .panel h2{font-size:23px;}
+    .panel .sub{font-size:12.5px;margin-bottom:18px;}
+    #splash h1{font-size:30px;}
+    #splash .tag{font-size:11px;letter-spacing:2px;}
+    #splash button{padding:12px 30px;font-size:14px;}
+    header.topbar{flex-wrap:wrap;gap:10px;padding:10px 14px 14px;}
+    .brand .name{font-size:18px;}
+    .steps{flex-basis:100%;justify-content:center;}
+    .actions{flex-direction:column-reverse;gap:10px;align-items:stretch;}
+    .actions .right{flex-direction:column-reverse;width:100%;}
+    .actions .right .btn, .actions > .btn{width:100%;text-align:center;}
+    .final-actions{flex-direction:column-reverse;}
+    .final-actions .btn{width:100%;text-align:center;}
+    .func-card-grid{grid-template-columns:1fr;gap:12px;}
+    .top-summary-card{padding:18px;gap:12px;}
+    .top-summary-card .item{flex:1 1 40%;}
+    .evt-grid, .item-grid, .svc-grid, .status-grid{grid-template-columns:repeat(auto-fill,minmax(108px,1fr));}
+    .add-func{flex-direction:column;align-items:stretch;}
+    .add-func button{width:100%;}
+    .func-tabs{gap:6px;}
+    .func-tab{padding:8px 12px;font-size:12.5px;}
+    .wishes-box{padding:18px 16px;}
+    .pill-row{flex-direction:column;align-items:stretch;}
+    .pill-btn{justify-content:center;}
+  }
+  @media(max-width:380px){
+    .evt-grid, .item-grid, .svc-grid, .status-grid{grid-template-columns:repeat(auto-fill,minmax(94px,1fr));}
+    .brand .mark{width:38px;height:38px;font-size:14px;}
+  }
+
+  /* Sub-accordion styles */
+  .sub-cat {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    margin: 10px 18px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .sub-cat-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    cursor: pointer;
+    background: var(--cream);
+    font-size: 13.5px;
+    font-weight: 600;
+    color: var(--rose-deep);
+    border-bottom: 1px solid var(--line);
+    user-select: none;
+  }
+  .sub-cat-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background: #fff;
+  }
+  .sub-cat.open .sub-cat-body {
+    max-height: 1000px;
+  }
+  .sub-cat.open .sub-chev {
+    transform: rotate(180deg);
+  }
+  .sub-chev {
+    transition: 0.2s;
+    color: var(--muted);
+  }
+  .sub-cat .item-grid {
+    padding: 12px 14px;
+  }
+</style>
+</head>
+<body>
+
+<div id="splash">
+  <div class="splash-bg"></div>
+  <div class="splash-overlay"></div>
+  <div class="hearts"></div>
+  <div class="glass-box">
+    <div class="splash-ring">
+      <div class="splash-mark" style="background: #7C3A4C; border: 1.5px solid var(--rose); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+        <img src="/assets/Logo/chef-svgrepo-color.svg" alt="Chef Logo" style="width: 52px; height: 52px;">
+      </div>
+    </div>
+    <h1>Udaipur Caterers</h1>
+    <div class="splash-tagline">SWAAD KA WAADA</div>
+    <button onclick="closeSplash()">ENTER NOW</button>
+  </div>
+</div>
+
+<div id="app">
+  <header class="topbar">
+    <div class="brand">
+      <div class="mark" style="background: #7C3A4C; border: 1.5px solid var(--rose);">
+        <img src="/assets/Logo/chef-svgrepo-color.svg" alt="Chef Logo" style="width: 32px; height: 32px;">
+      </div>
+      <div>
+        <div class="name">Udaipur Caterers</div>
+        <div class="loc">SWAAD KA WAADA</div>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <div class="lang-toggle" onclick="toggleLanguage()">
+        <span id="langEn" class="active">En</span>
+        <span class="sep">|</span>
+        <span id="langHi">हिं</span>
+      </div>
+      <div class="steps" id="stepDots"></div>
+    </div>
+  </header>
+
+  <div id="stepArea"></div>
+</div>
+
+<script>
+/* ---------------- hearts ---------------- */
+const heartWrap = document.querySelector('.hearts');
+for(let i=0;i<24;i++){
+  const p=document.createElement('div');
+  p.className='heart';
+  p.textContent='❤';
+  p.style.left = Math.random()*100+'%';
+  p.style.fontSize = (12+Math.random()*14)+'px';
+  p.style.animationDuration = (5+Math.random()*6)+'s';
+  p.style.animationDelay = (Math.random()*6)+'s';
+  p.style.opacity = 0.5+Math.random()*0.5;
+  heartWrap.appendChild(p);
+}
+function closeSplash(){ document.getElementById('splash').classList.add('hide'); }
+
+/* ---------------- data ---------------- */
+const EVENT_TYPES = [
+  {
+    key: 'wedding',
+    label: 'Wedding / Shadi',
+    emoji: '💍',
+    svg: `<svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="8.5" cy="12" r="5" />
+      <circle cx="15.5" cy="12" r="5" />
+      <path d="M12 9.5a5 5 0 0 1 0 5" />
+    </svg>`,
+    defaults: ['Mehendi','Haldi','Mahila Sangeet','Barat / Wedding Day','Reception']
+  },
+  {
+    key: 'birthday',
+    label: 'Birthday Party',
+    emoji: '🎂',
+    svg: `<svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="14" width="18" height="7" rx="2" />
+      <rect x="5" y="8" width="14" height="6" rx="2" />
+      <path d="M9 8V5M12 8V4M15 8V5" />
+      <path d="M9 3v.01M12 2v.01M15 3v.01" />
+    </svg>`,
+    defaults: ['Birthday Party']
+  },
+  {
+    key: 'anniversary',
+    label: 'Anniversary',
+    emoji: '💞',
+    svg: `<svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+    </svg>`,
+    defaults: ['Anniversary Celebration']
+  },
+  {
+    key: 'event',
+    label: 'Office / Corporate',
+    emoji: '🎉',
+    svg: `<svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+      <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+    </svg>`,
+    defaults: ['Main Event']
+  },
+  {
+    key: 'picnic',
+    label: 'Picnic / Outing',
+    emoji: '🧺',
+    svg: `<svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2L2 22h20L12 2z" />
+      <path d="M12 2v20" />
+      <path d="M17 22l-5-8-5 8" />
+    </svg>`,
+    defaults: ['Picnic Day']
+  },
+  {
+    key: 'other',
+    label: 'Other',
+    emoji: '✨',
+    svg: `<svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10" />
+      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+      <line x1="12" y1="17" x2="12.01" y2="17" />
+    </svg>`,
+    defaults: ['Function 1']
+  }
+];
+
+const FOOD_CATEGORIES = window.FOOD_CATEGORIES;
+const FOOD_TRANSLATIONS = window.FOOD_TRANSLATIONS;
+const getCategoryBanner = window.getCategoryBanner;
+
+function translateFoodItem(name) {
+  const isEn = (state.lang === 'en');
+  const mapped = FOOD_TRANSLATIONS[name];
+  if (!mapped) return name;
+  const isHindi = /[\u0900-\u097F]/.test(name);
+  if (isEn) {
+    return isHindi ? mapped : name;
+  } else {
+    return !isHindi ? mapped : name;
+  }
+}
+
+const CATEGORY_SVGS = {
+  breakfast: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+    <path d="M6 1v3M10 1v3M14 1v3"/>
+  </svg>`,
+  soup: '/assets/Icons/icon_soup.svg',
+  sabji: '/assets/Icons/icon_main-course-sabji.svg',
+  roti: '/assets/Icons/icon_roti.svg',
+  pulav: '/assets/Icons/icon_pulav.svg',
+  punjabi: '/assets/Icons/icon_punjabi.svg',
+  south: '/assets/Icons/icon_south-indian.svg',
+  rajasthani: '/assets/Icons/icon_rajasthani.svg',
+  liveSabji: '/assets/Icons/icon_main-course-live sabjiya.svg',
+  live: '/assets/Icons/icon_extra-counter-live.svg',
+  mithai: '/assets/Icons/icon_mithai.svg',
+  drinks: '/assets/Icons/icon_mocktails.svg',
+  mahilaSangeet: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9 18V5l12-2v13"/>
+    <circle cx="6" cy="18" r="3"/>
+    <circle cx="18" cy="16" r="3"/>
+  </svg>`,
+  funcSpecial: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M6 8h12M4 8c0 5 3 9 8 9s8-4 8-9H4z"/>
+    <path d="M8 5v3M12 4v4M16 5v3"/>
+    <circle cx="12" cy="13" r="1.5"/>
+  </svg>`,
+  paan: '/assets/Icons/icon_paan.svg',
+  fruits: '/assets/Icons/icon_fruit.svg'
+};
+
+const CATEGORY_COVERS = {
+  breakfast: '/assets/header_nashta.jpg',
+  soup: '/assets/header_soup.jpg',
+  sabji: '/assets/header_main course-sabji.png',
+  roti: '/assets/header_roti.jpg',
+  pulav: '/assets/header_rice.jpg',
+  punjabi: '/assets/header_punjabi.jpg',
+  south: '/assets/header_south_indian.jpg',
+  rajasthani: '/assets/header_rajasthani.jpg',
+  liveSabji: '/assets/header_live sabji.jpg',
+  live: '/assets/header_chinese.jpg',
+  mithai: '/assets/header_mithai.jpg',
+  drinks: '/assets/header_cocktail.jpg',
+  mahilaSangeet: '/assets/royal_buffet_setup.png',
+  funcSpecial: '/assets/header_function special.jpg',
+  paan: '/assets/header_mukhwas.jpg',
+  fruits: '/assets/header_fruits.jpg'
+};
+
+const DEFAULT_SVG = `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  <circle cx="12" cy="12" r="10"/>
+  <path d="M12 8v8M8 12h8"/>
+</svg>`;
+
+const SETUP_THEMES = [
+  ['Light Setup','💡'],['Golden Setup','✨'],['Glass Setup','🪟'],
+  ['Theme Setup','🎺'],['Simple Cloth Frill Setup','🎀']
+];
+
+const OTHER_SERVICES = [
+  {key:'staff', group:'Staff & Service', desc:'Poore event ke liye service staff', items:[
+    ['Waiters','🧑💼'],['Mobile Waiters','🚶'],['Girl Waiters','🙋♀️'],['Water / Drinks Garden Mobile Service','🥤']
+  ]},
+  {key:'structure', group:'Structure & Seating', desc:'Tent, round aur baithak ka intezaam', items:[
+    ['Tent','⛺'],['Round / Shamiyana','🎪']
+  ]},
+  {key:'decor', group:'Decoration & Stage', desc:'Theme, stage, mandap aur lighting', items:[
+    ['Function Theme Decoration','🎨'],['Stage Decoration','🎭'],['Lagan Mandap Decoration','💐'],['Lighting','🌟']
+  ]},
+  {key:'media', group:'Media & Memories', desc:'Capture beautiful moments of your celebration', items:[
+    ['Photography','📸'],['Videography','🎥'],['Pre-Wedding Shoot','🌅']
+  ]},
+  {key:'styling', group:'Entertainment & Styling', desc:'Sound, henna, and styling arrangements', items:[
+    ['Sound System','🔊'],['Heena Maker','🎨'],['Dress on Rent','👗'],['Tailor','🪡']
+  ]},
+  {key:'ritual', group:'Ritual', desc:'Vidhi-vidhaan ke liye', items:[
+    ['Pandit Ji Booking','🕉️']
+  ]}
+];
+
+const CATERER_INFO = {
+  name:'Udaipur Caterers',
+  phone:'+91 94140 XXXXX',
+  phoneRaw:'9194140XXXXX',
+  email:'info@udaipurcaterers.com',
+  address:'Near Lake Pichola, Udaipur, Rajasthan'
+};
+
+/* ---------------- state ---------------- */
+let state = {
+  client:{ eventType:'wedding', family:'', bride:'', groom:'', host:'', guests:'', startDate:'', address:'', days:'3' },
+  functions:[],
+  services: new Set(),
+  step:0,
+  lang:'en'
+};
+
+const LANG_TEXTS = {
+  en: {
+    step1_title: "Which Event is this Service for?",
+    step1_sub: "Select the type of event to customize your catering proposal.",
+    step1_next: "Next →",
+    step2_title: "Client Details",
+    step2_sub: "Please fill in the client's details. This information will appear on the cover page of the final PDF.",
+    step2_family: "Family Name (e.g. Jain Family)",
+    step2_family_ph: "Jain Family",
+    step2_guests: "Number of Guests",
+    step2_bride: "Bride's Name",
+    step2_bride_ph: "Enter Bride's Name",
+    step2_groom: "Groom's Name",
+    step2_groom_ph: "Enter Groom's Name",
+    step2_host: "Host Name",
+    step2_host_ph: "Enter Host Name",
+    step2_date: "Event Start Date",
+    step2_address: "Event Address",
+    step2_address_ph: "Enter full address of the event",
+    step2_duration: "Event Duration (in Days)",
+    step2_days: "days",
+    step3_title: "Functions & Dates",
+    step3_sub: "Add all functions, specify dates, guest counts, and service timings.",
+    step3_date: "Date",
+    step3_members: "Guests for this function (optional)",
+    step3_members_ph: "Enter if different from overall guests",
+    step3_serve_time: "When will food be served?",
+    step3_morning: "Morning",
+    step3_day: "Day",
+    step3_night: "Night",
+    step3_remove: "Remove",
+    step3_add_ph: "Enter function name (e.g., Tilak, Haldi)",
+    step3_add_btn: "+ Add Function",
+    step4_title: "Menu Selection",
+    step4_sub: "Select menu items for each function.",
+    step4_selected: "selected",
+    step5_title: "Additional Services",
+    step5_sub: "Select setup themes, service staff, decoration, and other arrangements.",
+    step5_setup: "Setup Theme",
+    step5_setup_sub: "Choose a setup theme for this function.",
+    step6_title: "Menu Summary",
+    step6_sub: "Review the catering proposal summary and generate your PDF booklet.",
+    step6_btn_edit: "← Edit Menu",
+    step6_btn_next: "Next →",
+    step6_overall_svc: "Additional Services (Overall)",
+    step6_overall_none: "No additional services selected.",
+    step7_title: "Thank You for Choosing Udaipur Caterers",
+    step7_sub: "Below is the overall summary of your booking.",
+    step7_wishes: "Best Wishes, {names}!",
+    step7_wishes_sub: "May your day be memorable — Warm wishes from Udaipur Caterers.",
+    step7_wa: "💬 WhatsApp Us",
+    step7_call: "📞 Call Us",
+    step7_btn_back: "← Back to Summary",
+    step7_btn_pdf: "📄 Generate Catering Booklet",
+    btn_next: "Next →",
+    btn_back: "← Back",
+    
+    // Categories translation:
+    cat_breakfast: "Breakfast Menu",
+    cat_soup: "Soups",
+    cat_sabji: "Main Course — Sabzi",
+    cat_roti: "Main Course — Roti",
+    cat_pulav: "Main Course — Pulav/Rice",
+    cat_punjabi: "Main Course — Punjabi Corner",
+    cat_south: "Main Course — South Indian",
+    cat_rajasthani: "Main Course — Rajasthani Corner",
+    cat_liveSabji: "Main Course — Live Sabzi",
+    cat_live: "Live Counter (Chinese/Chaat)",
+    cat_mithai: "Mithai & Desserts",
+    cat_drinks: "Drinks & Mocktails",
+    cat_mahilaSangeet: "Mahila Sangeet Special",
+    cat_funcSpecial: "Traditional Food",
+    cat_paan: "Paan & Mukhwas",
+    cat_fruits: "Fresh Fruits",
+    
+    // Subcategories translation:
+    sub_paneer_special: "Paneer Special",
+    sub_other_sabziya: "Other Sabziya",
+    sub_puri_special: "Puri Special",
+    sub_roti_special: "Roti Special",
+    sub_fresh_juices: "Fresh Juices",
+    sub_special_shakes: "Special Shakes",
+    
+    // Default Function Names:
+    fn_mehendi: "Mehendi",
+    fn_haldi: "Haldi",
+    fn_mahila_sangeet: "Mahila Sangeet",
+    fn_barat_wedding_day: "Barat / Wedding Day",
+    fn_reception: "Reception",
+    fn_birthday_party: "Birthday Party",
+    fn_anniversary_celebration: "Anniversary Celebration",
+    fn_main_event: "Main Event",
+    fn_picnic_day: "Picnic Day",
+    fn_function_1: "Function 1",
+    
+    // Event names translation:
+    evt_wedding: "Wedding / Shadi",
+    evt_birthday: "Birthday Party",
+    evt_anniversary: "Anniversary",
+    evt_event: "Office / Corporate",
+    evt_picnic: "Picnic / Outing",
+    evt_other: "Other",
+    
+    // Additional Services groups:
+    svc_grp_staff: "Staff & Service",
+    svc_grp_staff_desc: "Professional service staff for your event",
+    svc_grp_structure: "Structure & Seating",
+    svc_grp_structure_desc: "Tent, seating, and layout arrangements",
+    svc_grp_decor: "Decoration & Stage",
+    svc_grp_decor_desc: "Themes, stage, mandap, and lighting setup",
+    svc_grp_media: "Media & Memories",
+    svc_grp_media_desc: "Photography, videography, and shoots",
+    svc_grp_styling: "Entertainment & Styling",
+    svc_grp_styling_desc: "Sound system, henna makers, and dress rentals",
+    svc_grp_ritual: "Ritual",
+    svc_grp_ritual_desc: "Pandit ji booking and ritual arrangements",
+    
+    // Status card translations:
+    status_food: "Food & Catering",
+    status_setup: "Setup Theme",
+    status_staff: "Waiters / Staff",
+    status_tent: "Tent & Seating",
+    status_decor: "Decoration & Stage",
+    status_lighting: "Lighting",
+    status_media: "Media & Shoot",
+    status_sound: "Sound System",
+    status_heena: "Heena Maker",
+    status_dress: "Dress & Tailor",
+    status_ritual: "Pandit Ji Booking"
+  },
+  hi: {
+    step1_title: "किस कार्यक्रम के लिए सर्विस चाहिए?",
+    step1_sub: "अपने कैटरिंग प्रस्ताव को अनुकूलित करने के लिए इवेंट का प्रकार चुनें।",
+    step1_next: "आगे बढ़ें →",
+    step2_title: "ग्राहक का विवरण (Client Details)",
+    step2_sub: "कृपया ग्राहक की आवश्यक जानकारी भरें — यह जानकारी अंतिम पीडीएफ (PDF) के मुख्य पृष्ठ पर प्रदर्शित होगी।",
+    step2_family: "पारिवारिक नाम (जैसे: सेठ परिवार, जैन परिवार)",
+    step2_family_ph: "जैन परिवार",
+    step2_guests: "अतिथियों की संख्या",
+    step2_bride: "दुल्हन का नाम",
+    step2_bride_ph: "दुल्हन का नाम दर्ज करें",
+    step2_groom: "दूल्हे का नाम",
+    step2_groom_ph: "दूल्हे का नाम दर्ज करें",
+    step2_host: "आयोजक का नाम",
+    step2_host_ph: "आयोजक का नाम दर्ज करें",
+    step2_date: "कार्यक्रम प्रारंभ तिथि",
+    step2_address: "कार्यक्रम का पता",
+    step2_address_ph: "कार्यक्रम का पूरा पता दर्ज करें",
+    step2_duration: "कार्यक्रम की कुल अवधि",
+    step2_days: "दिन",
+    step3_title: "कार्यक्रम और तिथियां (Functions & Dates)",
+    step3_sub: "सभी फंक्शन जोड़ें, उनकी तिथि, मेहमानों की संख्या और भोजन परोसने का समय निर्धारित करें।",
+    step3_date: "तिथि",
+    step3_members: "इस कार्यक्रम के मेहमान (वैकल्पिक)",
+    step3_members_ph: "यदि मुख्य संख्या से अलग हो",
+    step3_serve_time: "भोजन कब परोसा जाएगा?",
+    step3_morning: "सुबह (Morning)",
+    step3_day: "दोपहर (Day)",
+    step3_night: "रात (Night)",
+    step3_remove: "हटाएं",
+    step3_add_ph: "नए कार्यक्रम का नाम लिखें (जैसे: तिलक, हल्दी)",
+    step3_add_btn: "+ कार्यक्रम जोड़ें",
+    step4_title: "मेनू चयन (Menu Selection)",
+    step4_sub: "प्रत्येक कार्यक्रम के लिए श्रेणी-वार व्यंजन चुनें।",
+    step4_selected: "चयनित",
+    step5_title: "अतिरिक्त सेवाएं (Additional Services)",
+    step5_sub: "सेटअप थीम, सर्विस स्टाफ, सजावट और अन्य व्यवस्थाएं चुनें।",
+    step5_setup: "सेटअप थीम",
+    step5_setup_sub: "इस कार्यक्रम के लिए एक सेटअप थीम चुनें।",
+    step6_title: "प्रस्ताव सारांश (Menu Summary)",
+    step6_sub: "नीचे दी गई समरी चेक करें और पीडीएफ जनरेट करें।",
+    step6_btn_edit: "← मेनू बदलें",
+    step6_btn_next: "आगे बढ़ें →",
+    step6_overall_svc: "अतिरिक्त सेवाएं (कुल)",
+    step6_overall_none: "कोई अतिरिक्त सेवा नहीं चुनी गई।",
+    step7_title: "उदयपुर कैटरर्स चुनने के लिए धन्यवाद",
+    step7_sub: "नीचे आपकी बुकिंग की कुल समरी दी गई है।",
+    step7_wishes: "हार्दिक शुभकामनाएं, {names}!",
+    step7_wishes_sub: "आपका यह दिन यादगार बने — उदयपुर कैटरर्स की तरफ से हार्दिक शुभकामनाएं।",
+    step7_wa: "💬 व्हाट्सएप करें",
+    step7_call: "📞 कॉल करें",
+    step7_btn_back: "← सारांश पर वापस जाएं",
+    step7_btn_pdf: "📄 कैटरिंग बुकलेट जनरेट करें",
+    btn_next: "आगे बढ़ें →",
+    btn_back: "← पीछे जाएं",
+    
+    // Categories translation:
+    cat_breakfast: "सुबह का नाश्ता (Breakfast)",
+    cat_soup: "सूप (Soup)",
+    cat_sabji: "मेन कोर्स — सब्जी",
+    cat_roti: "मेन कोर्स — रोटी",
+    cat_pulav: "मेन कोर्स — पुलाव/चावल",
+    cat_punjabi: "मेन कोर्स — पंजाबी कॉर्नर",
+    cat_south: "मेन कोर्स — साउथ इंडियन",
+    cat_rajasthani: "मेन कोर्स — राजस्थानी कॉर्नर",
+    cat_liveSabji: "मेन कोर्स — लाइव सब्जियां",
+    cat_live: "लाइव काउंटर (चाऊमीन/चाट)",
+    cat_mithai: "मिठाई और डेसर्ट",
+    cat_drinks: "ड्रिंक्स और मॉकटेल्स",
+    cat_mahilaSangeet: "महिला संगीत स्पेशल",
+    cat_funcSpecial: "पारंपरिक भोजन",
+    cat_paan: "पान और मुखवास काउंटर",
+    cat_fruits: "ताजे फल (Fresh Fruits)",
+    
+    // Subcategories translation:
+    sub_paneer_special: "पनीर स्पेशल",
+    sub_other_sabziya: "अन्य सब्जियां",
+    sub_puri_special: "पूड़ी स्पेशल",
+    sub_roti_special: "रोटी स्पेशल",
+    sub_fresh_juices: "ताजा ज्यूस",
+    sub_special_shakes: "स्पेशल शेक्स",
+    
+    // Default Function Names:
+    fn_mehendi: "मेहंदी",
+    fn_haldi: "हल्दी",
+    fn_mahila_sangeet: "महिला संगीत",
+    fn_barat_wedding_day: "बारात / विवाह दिवस",
+    fn_reception: "रिसेप्शन",
+    fn_birthday_party: "जन्मदिन की पार्टी",
+    fn_anniversary_celebration: "सालगिरह उत्सव",
+    fn_main_event: "मुख्य कार्यक्रम",
+    fn_picnic_day: "पिकनिक दिवस",
+    fn_function_1: "फंक्शन 1",
+    
+    // Event names translation:
+    evt_wedding: "शादी / विवाह (Wedding)",
+    evt_birthday: "जन्मदिन पार्टी (Birthday)",
+    evt_anniversary: "वर्षगांठ (Anniversary)",
+    evt_event: "ऑफिस / कॉर्पोरेट",
+    evt_picnic: "पिकनिक / आउटिंग",
+    evt_other: "अन्य (Other)",
+    
+    // Additional Services groups:
+    svc_grp_staff: "कर्मचारी और सेवा (Staff & Service)",
+    svc_grp_staff_desc: "आपके कार्यक्रम के लिए पेशेवर सर्विस स्टाफ",
+    svc_grp_structure: "टेंट और बैठक (Structure & Seating)",
+    svc_grp_structure_desc: "टेंट, राउंड टेबल और बैठने की उत्तम व्यवस्था",
+    svc_grp_decor: "सजावट और स्टेज (Decoration)",
+    svc_grp_decor_desc: "थीम डेकोरेशन, स्टेज, वेदी और लाइटिंग",
+    svc_grp_media: "मीडिया और यादें (Media & Shoot)",
+    svc_grp_media_desc: "फोटोग्राफी, वीडियोग्राफी और प्री-वेडिंग शूट",
+    svc_grp_styling: "मनोरंजन और स्टाइलिंग (Styling)",
+    svc_grp_styling_desc: "साउंड सिस्टम, मेहंदी कलाकार, और किराए की पोशाक",
+    svc_grp_ritual: "पूजा एवं अनुष्ठान (Ritual)",
+    svc_grp_ritual_desc: "पंडित जी बुकिंग एवं पूजन सामग्री व्यवस्था",
+    
+    // Status card translations:
+    status_food: "भोजन एवं कैटरिंग",
+    status_setup: "सेटअप थीम",
+    status_staff: "कर्मचारी और वेटर्स",
+    status_tent: "टेंट और बैठक व्यवस्था",
+    status_decor: "सजावट एवं स्टेज",
+    status_lighting: "लाइटिंग व्यवस्था",
+    status_media: "फोटोग्राफी एवं शूट",
+    status_sound: "साउंड सिस्टम",
+    status_heena: "मेहंदी कलाकार",
+    status_dress: "पोशाक और दर्जी व्यवस्था",
+    status_ritual: "पंडित जी बुकिंग"
+  }
+};
+
+function txt(key) {
+  return LANG_TEXTS[state.lang][key] || '';
+}
+
+function translateFuncName(name) {
+  const key = 'fn_' + name.toLowerCase().replace(/[^a-z0-9]/g, '_').replace(/_+/g, '_').trim().replace(/_$/, '');
+  return txt(key) || name;
+}
+
+function translateSubName(subName) {
+  if (subName.includes('पनीर')) return txt('sub_paneer_special') || subName;
+  if (subName.includes('अन्य')) return txt('sub_other_sabziya') || subName;
+  if (subName.includes('पूड़ी')) return txt('sub_puri_special') || subName;
+  if (subName.includes('रोटी')) return txt('sub_roti_special') || subName;
+  if (subName.includes('ज्यूस')) return txt('sub_fresh_juices') || subName;
+  if (subName.includes('शेक')) return txt('sub_special_shakes') || subName;
+  return subName;
+}
+
+function toggleLanguage() {
+  state.lang = state.lang === 'en' ? 'hi' : 'en';
+  document.getElementById('langEn').className = state.lang === 'en' ? 'active' : '';
+  document.getElementById('langHi').className = state.lang === 'hi' ? 'active' : '';
+  render();
+}
+let fnCounter=0;
+let currentFuncId=null;
+let activeSubAccordions = new Set();
+function newFunction(name){
+  fnCounter++;
+  return {id:'f'+fnCounter, name:name, date:'', members:'', time:new Set(), selections:{}, setupTheme:null, activeCat:null};
+}
+function resetFunctionsForEvent(key){
+  const evt = EVENT_TYPES.find(e=>e.key===key) || EVENT_TYPES[0];
+  state.functions = evt.defaults.map(n=>newFunction(n));
+  currentFuncId = state.functions[0].id;
+}
+resetFunctionsForEvent('wedding');
+
+const STEP_LABELS = ['Event Type','Client Details','Functions & Dates','Menu Selection','Additional Services','Final Summary','Thank You'];
+
+function renderDots(){
+  const el=document.getElementById('stepDots');
+  el.innerHTML='';
+  STEP_LABELS.forEach((_,i)=>{
+    const d=document.createElement('div');
+    d.className='step-dot'+(i===state.step?' active':(i<state.step?' done':''));
+    el.appendChild(d);
+  });
+}
+function goStep(n){
+  state.step=n;
+  render();
+  history.pushState({step:n}, '', location.href);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+window.addEventListener('popstate', (e)=>{
+  state.step = (e.state && typeof e.state.step==='number') ? e.state.step : 0;
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+history.replaceState({step:0}, '', location.href);
+
+function render(){
+  renderDots();
+  const area=document.getElementById('stepArea');
+  if(state.step===0) area.innerHTML = stepEvent();
+  else if(state.step===1) area.innerHTML = stepClient();
+  else if(state.step===2) area.innerHTML = stepFunctions();
+  else if(state.step===3) area.innerHTML = stepMenu();
+  else if(state.step===4) area.innerHTML = stepServices();
+  else if(state.step===5) area.innerHTML = stepSummary();
+  else area.innerHTML = stepThankYou();
+  attachHandlers();
+}
+
+/* ---------------- STEP 0: event type ---------------- */
+function stepEvent(){
+  const cards = EVENT_TYPES.map(e=>`
+    <div class="evt-card ${state.client.eventType===e.key?'sel':''}" data-evt="${e.key}">
+      <div class="evt-icon">${e.svg}</div>
+      <span class="evt-label">${txt('evt_' + e.key) || e.label}</span>
+    </div>`).join('');
+  return `
+  <div class="panel panel-split">
+    <div class="panel-left-img"></div>
+    <div class="panel-right-content">
+      <span class="eyebrow">${state.lang === 'en' ? 'Step 1' : 'चरण 1'}</span>
+      <h2>${txt('step1_title')}</h2>
+      <p class="sub">${txt('step1_sub')}</p>
+      <div class="evt-grid">${cards}</div>
+    </div>
+  </div>`;
+}
+
+/* ---------------- STEP 1: client details ---------------- */
+function stepClient(){
+  const isWedding = state.client.eventType==='wedding';
+  const days=[1,2,3,4,5,6,7,8,9,10].map(d=>`
+    <div class="day-pill ${String(state.client.days)===String(d)?'sel':''}" data-day="${d}">${d} ${txt('step2_days')}</div>`).join('');
+  const nameFields = isWedding ? `
+      <label class="field"><span>${txt('step2_bride')}</span>
+        <input type="text" id="c_bride" value="${state.client.bride}" placeholder="${txt('step2_bride_ph')}"></label>
+      <label class="field"><span>${txt('step2_groom')}</span>
+        <input type="text" id="c_groom" value="${state.client.groom}" placeholder="${txt('step2_groom_ph')}"></label>` : `
+      <label class="field"><span>${txt('step2_host')}</span>
+        <input type="text" id="c_host" value="${state.client.host}" placeholder="${txt('step2_host_ph')}"></label>`;
+  return `
+  <div class="client-split">
+    <!-- Live Cover Booklet Preview on Left -->
+    <div class="client-preview-col">
+      <div>
+        <span class="preview-eyebrow" style="font-family:'Marcellus SC',serif; color:var(--gold-light); font-size:11px; letter-spacing:2px; text-transform:uppercase;">Live Cover Preview</span>
+        <div class="preview-logo-row" style="display:flex; align-items:center; gap:8px; margin-top:20px; margin-bottom:40px;">
+          <div style="background:#7C3A4C; border:1px solid var(--rose); width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <img src="/assets/Logo/chef-svgrepo-color.svg" style="width:20px; height:20px;">
+          </div>
+          <span style="font-family:'Playfair Display',serif; font-weight:700; font-size:16px; letter-spacing:0.5px; color:#fff;">Udaipur Caterers</span>
+        </div>
+        
+        <div class="preview-proposal-title" style="font-family:'Playfair Display',serif; font-weight:700; font-size:24px; color:var(--gold-light); line-height:1.3; margin-bottom:12px;" id="pv_proposal_title">
+          Wedding Catering Proposal
+        </div>
+        <div style="font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 24px; text-transform:uppercase; letter-spacing:0.5px;">Prepared for:</div>
+        <div class="preview-family-name" style="font-family:'Playfair Display',serif; font-size:22px; font-weight:600; color:var(--ivory); margin-bottom:6px;" id="pv_family">
+          —
+        </div>
+        <div class="preview-couple-name" style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:18px; color:var(--gold-light); margin-bottom:30px;" id="pv_couple">
+          —
+        </div>
+      </div>
+      
+      <div class="preview-meta-details" style="border-top:1px dashed rgba(239,203,139,0.25); padding-top:20px; font-size:12.5px; display:flex; flex-direction:column; gap:10px; color:rgba(255,255,255,0.85);">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="color:var(--gold-light); display:flex; align-items:center; justify-content:center;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </span>
+          <span id="pv_guests">—</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="color:var(--gold-light); display:flex; align-items:center; justify-content:center;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+              <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+              <line x1="16" y1="2" x2="16" y2="6" />
+              <line x1="8" y1="2" x2="8" y2="6" />
+              <line x1="3" y1="10" x2="21" y2="10" />
+            </svg>
+          </span>
+          <span id="pv_date">—</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="color:var(--gold-light); display:flex; align-items:center; justify-content:center;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+              <circle cx="12" cy="10" r="3" />
+            </svg>
+          </span>
+          <span id="pv_address" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:200px;">—</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Fields on Right -->
+    <div class="client-form-col">
+      <span class="eyebrow">${state.lang === 'en' ? 'Step 2' : 'चरण 2'}</span>
+      <h2 style="color:var(--rose-deep); margin:0 0 4px; font-family:'Playfair Display',serif; font-size:28px; font-weight:700;">${txt('step2_title')}</h2>
+      <p class="sub" style="color:var(--muted); font-size:13.5px; margin:0 0 24px;">${txt('step2_sub')}</p>
+      
+      <div class="grid2" style="margin-bottom: 20px;">
+        <label class="field"><span>${txt('step2_family')}</span>
+          <input type="text" id="c_family" value="${state.client.family}" placeholder="${txt('step2_family_ph')}"></label>
+        <label class="field"><span>${txt('step2_guests')}</span>
+          <input type="number" id="c_guests" value="${state.client.guests}" placeholder="1000"></label>
+        ${nameFields}
+        <label class="field"><span>${txt('step2_date')}</span>
+          <input type="date" id="c_date" value="${state.client.startDate}"></label>
+        <label class="field" style="grid-column: span 2;"><span>${txt('step2_address')}</span>
+          <input type="text" id="c_address" value="${state.client.address}" placeholder="${txt('step2_address_ph')}"></label>
+      </div>
+      
+      <label class="field"><span>${txt('step2_duration')}</span></label>
+      <div class="days-radio">${days}</div>
+      
+      <div class="actions" style="margin-top: 32px;">
+        <button class="btn ghost" id="backTo0">${txt('btn_back')}</button>
+        <div class="right"><button class="btn" id="toStep2">${txt('btn_next')}</button></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ---------------- STEP 2: functions & dates ---------------- */
+function stepFunctions(){
+  const rows = state.functions.map(f=>`
+    <div class="func-card" data-fid="${f.id}">
+      <div class="func-card-top">
+        <b>${translateFuncName(f.name)}</b>
+        <span class="remove-func" data-remove="${f.id}">${txt('step3_remove')}</span>
+      </div>
+      <div class="func-card-grid">
+        <div>
+          <label class="small">${txt('step3_date')}</label>
+          <input type="date" class="fdate-input" data-fid="${f.id}" value="${f.date}">
+        </div>
+        <div>
+          <label class="small">${txt('step3_members')}</label>
+          <input type="number" class="fmembers-input" data-fid="${f.id}" value="${f.members}" placeholder="${txt('step3_members_ph')}">
+        </div>
+        <div>
+          <label class="small">${txt('step3_serve_time')}</label>
+          <div class="time-checks">
+            <label><input type="checkbox" class="ftime-input" data-fid="${f.id}" data-time="morning" ${f.time.has('morning')?'checked':''}> ${txt('step3_morning')}</label>
+            <label><input type="checkbox" class="ftime-input" data-fid="${f.id}" data-time="day" ${f.time.has('day')?'checked':''}> ${txt('step3_day')}</label>
+            <label><input type="checkbox" class="ftime-input" data-fid="${f.id}" data-time="night" ${f.time.has('night')?'checked':''}> ${txt('step3_night')}</label>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+  return `
+  <div class="panel">
+    <span class="eyebrow">${state.lang === 'en' ? 'Step 3' : 'चरण 3'}</span>
+    <h2>${txt('step3_title')}</h2>
+    <p class="sub">${txt('step3_sub')}</p>
+    ${rows}
+    <div class="add-func">
+      <input type="text" id="newFuncName" placeholder="${txt('step3_add_ph')}">
+      <button class="btn ghost" id="addFuncBtn">${txt('step3_add_btn')}</button>
+    </div>
+    <div class="actions">
+      <button class="btn ghost" id="backTo1">${txt('btn_back')}</button>
+      <div class="right"><button class="btn" id="toStep3">${txt('btn_next')}</button></div>
+    </div>
+  </div>`;
+}
+
+/* ---------------- STEP 3: menu builder ---------------- */
+function countSel(func){ return Object.values(func.selections).reduce((s,set)=>s+set.size,0); }
+function categoriesForFunc(func){
+  const nameLc = func.name.toLowerCase();
+  return FOOD_CATEGORIES.filter(cat=>{
+    if(cat.onlyFor === 'sangeet') return nameLc.includes('sangeet');
+    return true;
+  });
+}
+function stepMenu(){
+  const tabs = state.functions.map(f=>`
+    <div class="func-tab ${f.id===currentFuncId?'active':''}" data-tab="${f.id}">
+      ${translateFuncName(f.name)} <span class="cnt">${countSel(f)}</span>
+    </div>`).join('');
+  const func = state.functions.find(f=>f.id===currentFuncId);
+  const cats = categoriesForFunc(func).map(cat=>{
+    const sel = func.selections[cat.key] || new Set();
+    const open = func.activeCat===cat.key;
+    
+    let baseItemsHtml = '';
+    let subAccordionsHtml = '';
+    
+    cat.items.forEach(item => {
+      if (Array.isArray(item)) {
+        const [name, emoji] = item;
+        baseItemsHtml += `
+          <div class="item-card ${sel.has(name)?'sel':''}" data-cat="${cat.key}" data-item="${name}">
+            <span class="stamp">✓</span>
+            <span class="item-name">${translateFoodItem(name)}</span>
+          </div>`;
+      } else if (item && typeof item === 'object' && item.sub) {
+        const subKey = cat.key + '_' + item.sub;
+        const isOpen = activeSubAccordions.has(subKey);
+        const subSelCount = item.items.filter(([name]) => sel.has(name)).length;
+        const subBadge = subSelCount > 0 ? `<span class="cat-count" style="margin-left: 8px; background:var(--rose); color:#fff;">${subSelCount} ${txt('step4_selected')}</span>` : '';
+        
+        const subItemsHtml = item.items.map(([name, emoji])=>`
+          <div class="item-card ${sel.has(name)?'sel':''}" data-cat="${cat.key}" data-item="${name}">
+            <span class="stamp">✓</span>
+            <span class="item-name">${translateFoodItem(name)}</span>
+          </div>`).join('');
+          
+        subAccordionsHtml += `
+          <div class="sub-cat ${isOpen ? 'open' : ''}">
+            <div class="sub-cat-head" data-subkey="${subKey}">
+              <span class="sub-cat-title">${translateSubName(item.sub)}</span>
+              <div style="display:flex;align-items:center;gap:10px;">
+                ${subBadge}
+                <span class="sub-chev">▾</span>
+              </div>
+            </div>
+            <div class="sub-cat-body" style="max-height: ${isOpen ? '2000px' : '0px'}; overflow:hidden; transition:max-height .3s ease; background:#fff;">
+              <div class="item-grid">
+                ${subItemsHtml}
+              </div>
+            </div>
+          </div>`;
+      }
+    });
+
+    const coverUrl = CATEGORY_COVERS[cat.key] || 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&auto=format&fit=crop&q=80';
+    const catTitle = txt('cat_' + cat.key) || cat.title;
+    const heroHtml = `
+      <div class="cat-hero" style="position: relative; overflow: hidden;">
+        <img src="${coverUrl}" class="cat-hero-img" alt="${catTitle}" loading="lazy">
+        <div class="image-watermark">Udaipur Caterers</div>
+        <div class="cat-hero-overlay">
+          <h3 class="cat-hero-title">${catTitle}</h3>
+        </div>
+      </div>
+    `;
+
+    const bodyContent = `
+      ${heroHtml}
+      ${baseItemsHtml ? `<div class="item-grid">${baseItemsHtml}</div>` : ''}
+      ${subAccordionsHtml}
+      <div class="add-more-row" style="padding: 10px 20px 20px; display: flex; justify-content: center;">
+        <button class="btn-add-more" data-addcat="${cat.key}">+ Add More (Special Request)</button>
+      </div>
+    `;
+
+    const catIcon = CATEGORY_SVGS[cat.key] || DEFAULT_SVG;
+    const catIconHtml = catIcon.startsWith('/') 
+      ? `<img src="${catIcon}" alt="${catTitle}" class="cat-icon-svg">` 
+      : catIcon;
+
+    return `
+    <div class="cat ${open?'open':''}" data-catkey="${cat.key}">
+      <div class="cat-head" data-cathead="${cat.key}">
+        <div class="left">
+          <div class="cat-icon">${catIconHtml}</div>
+          <div class="cat-title">${catTitle}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="cat-count">${sel.size} ${txt('step4_selected')}</span>
+          <span class="chev">▾</span>
+        </div>
+      </div>
+      <div class="cat-body" style="position: relative; overflow: hidden;">
+        <div class="section-watermark">Udaipur Caterers</div>
+        ${bodyContent}
+      </div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="panel">
+    <span class="eyebrow">${state.lang === 'en' ? 'Step 4' : 'चरण 4'}</span>
+    <h2>${txt('step4_title')}</h2>
+    <p class="sub">${txt('step4_sub')}</p>
+    <div class="func-tabs">${tabs}</div>
+    <div class="func-card-top" style="margin-bottom:18px;">
+      <b style="color:var(--rose-deep)">${translateFuncName(func.name)}</b>
+      <span style="color:var(--muted);font-size:12.5px;">${func.date? formatDate(func.date):''}</span>
+    </div>
+    ${cats}
+    <div class="actions">
+      <button class="btn ghost" id="backTo2">${txt('btn_back')}</button>
+      <div class="right"><button class="btn" id="toStep4">${txt('btn_next')}</button></div>
+    </div>
+  </div>`;
+}
+
+/* ---------------- STEP 4: services ---------------- */
+function stepServices(){
+  const setupBlocks = state.functions.map(f=>{
+    const cards = SETUP_THEMES.map(([name,emoji])=>`
+      <div class="svc-card ${f.setupTheme===name?'sel':''}" data-setupfn="${f.id}" data-setupname="${name}">
+        <span class="stamp2">✓</span>
+        <span class="svc-emoji">${emoji}</span>
+        <span class="svc-name">${name}</span>
+      </div>`).join('');
+    return `
+    <div class="svc-group">
+      <h3>${translateFuncName(f.name)} — ${txt('step5_setup')}</h3>
+      <p class="desc">${txt('step5_setup_sub')}</p>
+      <div class="svc-grid">${cards}</div>
+    </div>`;
+  }).join('');
+
+  const otherBlocks = OTHER_SERVICES.map(grp=>{
+    const cards = grp.items.map(([name,emoji])=>`
+      <div class="svc-card ${state.services.has(name)?'sel':''}" data-svc="${name}">
+        <span class="stamp2">✓</span>
+        <span class="svc-emoji">${emoji}</span>
+        <span class="svc-name">${name}</span>
+      </div>`).join('');
+    const groupTitle = txt('svc_grp_' + grp.key) || grp.group;
+    const groupDesc = txt('svc_grp_' + grp.key + '_desc') || grp.desc;
+    return `
+    <div class="svc-group">
+      <h3>${groupTitle}</h3>
+      <p class="desc">${groupDesc}</p>
+      <div class="svc-grid">${cards}</div>
+    </div>`;
+  }).join('');
+
+  return `
+  <div class="panel">
+    <span class="eyebrow">${state.lang === 'en' ? 'Step 5' : 'चरण 5'}</span>
+    <h2>${txt('step5_title')}</h2>
+    <p class="sub">${txt('step5_sub')}</p>
+    ${setupBlocks}
+    ${otherBlocks}
+    <div class="actions">
+      <button class="btn ghost" id="backTo3">${txt('btn_back')}</button>
+      <div class="right"><button class="btn" id="toStep5">${txt('btn_next')}</button></div>
+    </div>
+  </div>`;
+}
+
+/* ---------------- STEP 5: summary ---------------- */
+function formatDate(d){
+  if(!d) return '';
+  const dt=new Date(d+'T00:00:00');
+  if(isNaN(dt)) return d;
+  return dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});
+}
+function namesLine(){
+  const c=state.client;
+  if(c.eventType==='wedding') return `${c.bride||'—'} &amp; ${c.groom||'—'}`;
+  return c.host || '—';
+}
+function computeTotalGuests(){
+  let total=0, anySet=false;
+  state.functions.forEach(f=>{
+    const n=parseInt(f.members,10);
+    if(!isNaN(n) && n>0){ total+=n; anySet=true; }
+  });
+  if(!anySet){
+    const overall=parseInt(state.client.guests,10);
+    return isNaN(overall)? '—' : overall;
+  }
+  return total;
+}
+function stepSummary(){
+  const c=state.client;
+  const funcBlocks = state.functions.map(f=>{
+    const cats = categoriesForFunc(f).map(cat=>{
+      const set = f.selections[cat.key];
+      if(!set || set.size===0) return '';
+      const tags = [...set].map(item=>`
+        <span class="tag" data-fid="${f.id}" data-cat="${cat.key}" data-item="${item}">
+          ${translateFoodItem(item)}<span class="tag-x" data-removepill="1">×</span>
+        </span>`).join('');
+      return `<div class="sum-cat"><div class="lbl">${txt('cat_' + cat.key) || cat.title}</div><div class="sum-tags">${tags}</div></div>`;
+    }).join('');
+    const timeTxt = f.time.size? [...f.time].join(', ') : '';
+    const dateStr = f.date ? formatDate(f.date) : (state.lang==='en'?'Date not set':'तिथि निर्धारित नहीं है');
+    const membersStr = f.members ? ((state.lang==='en'?'Guests: ':'मेहमान: ') + f.members) : '';
+    const metaLine = [dateStr, membersStr, timeTxt].filter(Boolean).join(' · ');
+    const setupLine = f.setupTheme? `<div class="sum-cat"><div class="lbl">${state.lang==='en'?'Setup Theme':'सेटअप थीम'}</div><div class="sum-tags"><span class="tag">${f.setupTheme}</span></div></div>` : '';
+    return `
+    <div class="summary-block">
+      <h3>${translateFuncName(f.name)}</h3>
+      <div class="fdate">${metaLine}</div>
+      ${setupLine}
+      ${cats || `<div class="empty-note">${state.lang==='en'?'No items selected for this function yet.':'इस कार्यक्रम के लिए अभी कोई आइटम सेलेक्ट नहीं हुआ है।'}</div>`}
+    </div>`;
+  }).join('');
+
+  const svcTags = [...state.services].map(s=>`<span class="tag">${s}</span>`).join('');
+
+  return `
+  <div class="panel">
+    <span class="eyebrow">${state.lang === 'en' ? 'Step 6' : 'चरण 6'}</span>
+    <h2>${txt('step6_title')}</h2>
+    <p class="sub">${txt('step6_sub')}</p>
+
+    <div class="top-summary-card">
+      <div class="item"><span>${state.lang==='en'?'Family':'परिवार'}</span><b>${c.family||'—'}</b></div>
+      <div class="item"><span>${c.eventType==='wedding' ? (state.lang==='en'?'Bride & Groom':'दुल्हन और दूल्हा') : (state.lang==='en'?'Host':'आयोजक')}</span><b>${namesLine()}</b></div>
+      <div class="item"><span>${state.lang==='en'?'Total Guests':'कुल अतिथि'}</span><b>${computeTotalGuests()}</b></div>
+      <div class="item"><span>${state.lang==='en'?'Start Date':'प्रारंभ तिथि'}</span><b>${c.startDate? formatDate(c.startDate):'—'}</b></div>
+      <div class="item"><span>${state.lang==='en'?'Days':'कुल दिन'}</span><b>${c.days||'—'}</b></div>
+    </div>
+
+    ${funcBlocks}
+
+    <div class="summary-block">
+      <h3>${txt('step6_overall_svc')}</h3>
+      <div class="sum-tags">${svcTags || `<span class="empty-note">${state.lang==='en'?'No additional services selected.':'कोई अतिरिक्त सेवा नहीं चुनी गई।'}</span>`}</div>
+    </div>
+
+    <div class="final-actions">
+      <button class="btn ghost" id="backTo4">${txt('step6_btn_edit')}</button>
+      <button class="btn gold" id="toStep6">${txt('step6_btn_next')}</button>
+    </div>
+  </div>`;
+}
+
+/* ---------------- STEP 6: thank you ---------------- */
+function computeStatus(){
+  const totalFoodItems = state.functions.reduce((s,f)=>s+countSel(f),0);
+  const anySetup = state.functions.some(f=>!!f.setupTheme);
+  const has = n => state.services.has(n);
+  return [
+    {icon:'🍽️', name: txt('status_food') || 'Food & Catering', ok: totalFoodItems>0},
+    {icon:'🎪', name: txt('status_setup') || 'Setup Theme', ok: anySetup},
+    {icon:'🧑💼', name: txt('status_staff') || 'Waiters / Staff', ok: has('Waiters')||has('Mobile Waiters')||has('Girl Waiters')||has('Water / Drinks Garden Mobile Service')},
+    {icon:'⛺', name: txt('status_tent') || 'Tent & Seating', ok: has('Tent')||has('Round / Shamiyana')},
+    {icon:'🎨', name: txt('status_decor') || 'Decoration & Stage', ok: has('Function Theme Decoration')||has('Stage Decoration')||has('Lagan Mandap Decoration')},
+    {icon:'🌟', name: txt('status_lighting') || 'Lighting', ok: has('Lighting')},
+    {icon:'📸', name: txt('status_media') || 'Media & Shoot', ok: has('Photography')||has('Videography')||has('Pre-Wedding Shoot')},
+    {icon:'🔊', name: txt('status_sound') || 'Sound System', ok: has('Sound System')},
+    {icon:'🌿', name: txt('status_heena') || 'Heena Maker', ok: has('Heena Maker')},
+    {icon:'👗', name: txt('status_dress') || 'Dress & Tailor', ok: has('Dress on Rent')||has('Tailor')},
+    {icon:'🕉️', name: txt('status_ritual') || 'Pandit Ji Booking', ok: has('Pandit Ji Booking')}
+  ];
+}
+function stepThankYou(){
+  const c=state.client;
+  const statuses = computeStatus().map(s=>`
+    <div class="status-card">
+      <span class="se">${s.icon}</span>
+      <div class="sn">${s.name}</div>
+      <span class="badge ${s.ok?'ok':'pending'}">${s.ok ? (state.lang==='en'?'✓ Confirmed':'✓ स्वीकृत') : (state.lang==='en'?'% Pending':'% लंबित')}</span>
+    </div>`).join('');
+
+  const names = c.eventType==='wedding' ? namesLine() : (c.host||c.family||(state.lang==='en'?'You':'आप'));
+  const wa = `https://wa.me/${CATERER_INFO.phoneRaw}?text=${encodeURIComponent('Namaste Udaipur Caterers.')}`;
+
+  return `
+  <div class="panel">
+    <span class="eyebrow">${state.lang === 'en' ? 'Step 7' : 'चरण 7'}</span>
+    <div class="ty-hero">
+      <h2>${txt('step7_title')}</h2>
+      <p>${txt('step7_sub')}</p>
+    </div>
+
+    <div class="status-grid">${statuses}</div>
+
+    <div class="wishes-box">
+      <div class="wtitle">${txt('step7_wishes').replace('{names}', names)}</div>
+      <p>${txt('step7_wishes_sub')}</p>
+    </div>
+
+    <div class="contact-block">
+      <div class="cn">${CATERER_INFO.name}</div>
+      <div class="ca">${CATERER_INFO.address} · ${CATERER_INFO.email}</div>
+      <div class="pill-row">
+        <a class="pill-btn wa" href="${wa}" target="_blank" rel="noopener">${txt('step7_wa')}</a>
+        <a class="pill-btn call" href="tel:+${CATERER_INFO.phoneRaw}">${txt('step7_call')}</a>
+      </div>
+    </div>
+
+    <div class="final-actions">
+      <button class="btn ghost" id="backTo5">${txt('step7_btn_back')}</button>
+      <button class="btn gold" id="downloadPdf">${txt('step7_btn_pdf')}</button>
+    </div>
+  </div>`;
+}
+
+function updateLivePreview(){
+  const f = document.getElementById('c_family')?.value || '';
+  const g = document.getElementById('c_guests')?.value || '';
+  const b = document.getElementById('c_bride')?.value || '';
+  const gr = document.getElementById('c_groom')?.value || '';
+  const h = document.getElementById('c_host')?.value || '';
+  const d = document.getElementById('c_date')?.value || '';
+  const ad = document.getElementById('c_address')?.value || '';
+  const daysSel = state.client.days || 3;
+  const isWedding = state.client.eventType === 'wedding';
+  const lang = state.lang;
+  
+  // Update state.client so it is preserved:
+  state.client.family = f;
+  state.client.guests = g;
+  if(isWedding) {
+    state.client.bride = b;
+    state.client.groom = gr;
+  } else {
+    state.client.host = h;
+  }
+  state.client.startDate = d;
+  state.client.address = ad;
+
+  // Update UI elements:
+  const titleEl = document.getElementById('pv_proposal_title');
+  if(titleEl) {
+    if(isWedding) {
+      titleEl.textContent = lang === 'en' ? 'Wedding Catering Proposal' : 'विवाह कैटरिंग प्रस्ताव';
+    } else {
+      titleEl.textContent = lang === 'en' ? 'Catering Service Proposal' : 'कैटरिंग सर्विस प्रस्ताव';
+    }
+  }
+  
+  const famEl = document.getElementById('pv_family');
+  if(famEl) famEl.textContent = f ? (f + (lang === 'en' ? ' Family' : ' परिवार')) : '—';
+  
+  const coupEl = document.getElementById('pv_couple');
+  if(coupEl) {
+    if(isWedding) {
+      coupEl.textContent = (b || '—') + ' & ' + (gr || '—');
+    } else {
+      coupEl.textContent = h || '—';
+    }
+  }
+  
+  const guestsEl = document.getElementById('pv_guests');
+  if(guestsEl) {
+    guestsEl.textContent = g ? (g + (lang === 'en' ? ' Expected Guests' : ' अपेक्षित अतिथि')) : '—';
+  }
+  
+  const dateEl = document.getElementById('pv_date');
+  if(dateEl) {
+    const formatted = d ? formatDate(d) : '';
+    dateEl.textContent = d ? (formatted + ` (${daysSel} ${lang === 'en' ? 'Days' : 'दिन'})`) : '—';
+  }
+  
+  const addrEl = document.getElementById('pv_address');
+  if(addrEl) {
+    addrEl.textContent = ad || '—';
+    addrEl.title = ad; // tooltip
+  }
+}
+
+/* ---------------- event handlers ---------------- */
+function attachHandlers(){
+  // step 0
+  document.querySelectorAll('[data-evt]').forEach(card=>{
+    card.onclick=()=>{
+      const key=card.dataset.evt;
+      state.client.eventType=key;
+      resetFunctionsForEvent(key);
+      goStep(1);
+    };
+  });
+
+  // step 1
+  const back0=document.getElementById('backTo0'); if(back0) back0.onclick=()=>goStep(0);
+  
+  const familyIn = document.getElementById('c_family');
+  if(familyIn) {
+    familyIn.oninput = updateLivePreview;
+    const guestsIn = document.getElementById('c_guests');
+    if(guestsIn) guestsIn.oninput = updateLivePreview;
+    const brideIn = document.getElementById('c_bride');
+    if(brideIn) brideIn.oninput = updateLivePreview;
+    const groomIn = document.getElementById('c_groom');
+    if(groomIn) groomIn.oninput = updateLivePreview;
+    const hostIn = document.getElementById('c_host');
+    if(hostIn) hostIn.oninput = updateLivePreview;
+    const dateIn = document.getElementById('c_date');
+    if(dateIn) dateIn.onchange = updateLivePreview;
+    const addressIn = document.getElementById('c_address');
+    if(addressIn) addressIn.oninput = updateLivePreview;
+    
+    updateLivePreview();
+  }
+
+  document.querySelectorAll('[data-day]').forEach(p=>{
+    p.onclick=()=>{
+      state.client.days=p.dataset.day;
+      document.querySelectorAll('[data-day]').forEach(x=>x.classList.remove('sel'));
+      p.classList.add('sel');
+      updateLivePreview();
+    };
+  });
+  const toS2=document.getElementById('toStep2');
+  if(toS2) toS2.onclick=()=>{
+    state.client.family=document.getElementById('c_family').value;
+    state.client.guests=document.getElementById('c_guests').value;
+    if(document.getElementById('c_bride')) state.client.bride=document.getElementById('c_bride').value;
+    if(document.getElementById('c_groom')) state.client.groom=document.getElementById('c_groom').value;
+    if(document.getElementById('c_host')) state.client.host=document.getElementById('c_host').value;
+    state.client.startDate=document.getElementById('c_date').value;
+    state.client.address=document.getElementById('c_address').value;
+    goStep(2);
+  };
+
+  // step 2
+  const back1=document.getElementById('backTo1'); if(back1) back1.onclick=()=>goStep(1);
+  const toS3=document.getElementById('toStep3'); if(toS3) toS3.onclick=()=>goStep(3);
+  document.querySelectorAll('.fdate-input').forEach(inp=>{
+    inp.onchange=()=>{ state.functions.find(x=>x.id===inp.dataset.fid).date=inp.value; };
+  });
+  document.querySelectorAll('.fmembers-input').forEach(inp=>{
+    inp.onchange=()=>{ state.functions.find(x=>x.id===inp.dataset.fid).members=inp.value; };
+  });
+  document.querySelectorAll('.ftime-input').forEach(inp=>{
+    inp.onchange=()=>{
+      const f=state.functions.find(x=>x.id===inp.dataset.fid);
+      if(inp.checked) f.time.add(inp.dataset.time); else f.time.delete(inp.dataset.time);
+    };
+  });
+  document.querySelectorAll('[data-remove]').forEach(el=>{
+    el.onclick=()=>{
+      state.functions=state.functions.filter(f=>f.id!==el.dataset.remove);
+      if(currentFuncId===el.dataset.remove && state.functions.length) currentFuncId=state.functions[0].id;
+      render();
+    };
+  });
+  const addBtn=document.getElementById('addFuncBtn');
+  if(addBtn) addBtn.onclick=()=>{
+    const inp=document.getElementById('newFuncName');
+    if(inp.value.trim()){ state.functions.push(newFunction(inp.value.trim())); render(); }
+  };
+
+  // step 3 (menu)
+  const back2=document.getElementById('backTo2'); if(back2) back2.onclick=()=>goStep(2);
+  const toS4=document.getElementById('toStep4'); if(toS4) toS4.onclick=()=>goStep(4);
+  document.querySelectorAll('[data-tab]').forEach(t=>{ t.onclick=()=>{ currentFuncId=t.dataset.tab; render(); }; });
+  document.querySelectorAll('[data-cathead]').forEach(h=>{
+    h.onclick=()=>{
+      const func=state.functions.find(f=>f.id===currentFuncId);
+      const key=h.dataset.cathead;
+      func.activeCat = func.activeCat===key? null : key;
+      render();
+    };
+  });
+  document.querySelectorAll('.item-card').forEach(card=>{
+    card.onclick=()=>{
+      const func=state.functions.find(f=>f.id===currentFuncId);
+      const key=card.dataset.cat, item=card.dataset.item;
+      if(!func.selections[key]) func.selections[key]=new Set();
+      const set=func.selections[key];
+      if(set.has(item)) set.delete(item); else set.add(item);
+      render();
+    };
+  });
+  document.querySelectorAll('.sub-cat-head').forEach(sh=>{
+    sh.onclick=(e)=>{
+      e.stopPropagation();
+      const subKey = sh.dataset.subkey;
+      if(activeSubAccordions.has(subKey)) activeSubAccordions.delete(subKey); else activeSubAccordions.add(subKey);
+      render();
+    };
+  });
+
+  document.querySelectorAll('[data-addcat]').forEach(btn => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const catKey = btn.dataset.addcat;
+      const func = state.functions.find(f => f.id === currentFuncId);
+      const cat = FOOD_CATEGORIES.find(c => c.key === catKey);
+      
+      const customName = prompt("अपनी मनपसंद डिश या स्पेशल रिक्वेस्ट लिखें (Enter custom dish / special request):");
+      if (customName && customName.trim()) {
+        const trimmed = customName.trim();
+        
+        // Add to selections
+        if (!func.selections[catKey]) func.selections[catKey] = new Set();
+        func.selections[catKey].add(trimmed);
+        
+        // Add to category items list if it doesn't exist
+        let exists = false;
+        cat.items.forEach(item => {
+          if (Array.isArray(item)) {
+            if (item[0] === trimmed) exists = true;
+          } else if (item && typeof item === 'object' && item.sub) {
+            if (item.items.some(subItem => subItem[0] === trimmed)) exists = true;
+          }
+        });
+        
+        if (!exists) {
+          cat.items.push([trimmed, '']);
+        }
+        
+        render();
+      }
+    };
+  });
+
+  // step 4 (services)
+  const back3=document.getElementById('backTo3'); if(back3) back3.onclick=()=>goStep(3);
+  const toS5=document.getElementById('toStep5'); if(toS5) toS5.onclick=()=>goStep(5);
+  document.querySelectorAll('[data-setupfn]').forEach(card=>{
+    card.onclick=()=>{
+      const f=state.functions.find(x=>x.id===card.dataset.setupfn);
+      f.setupTheme = f.setupTheme===card.dataset.setupname? null : card.dataset.setupname;
+      render();
+    };
+  });
+  document.querySelectorAll('[data-svc]').forEach(card=>{
+    card.onclick=()=>{
+      const name=card.dataset.svc;
+      if(state.services.has(name)) state.services.delete(name); else state.services.add(name);
+      render();
+    };
+  });
+
+  // step 5 (summary)
+  const back4=document.getElementById('backTo4'); if(back4) back4.onclick=()=>goStep(4);
+  const toS6=document.getElementById('toStep6'); if(toS6) toS6.onclick=()=>goStep(6);
+  document.querySelectorAll('[data-removepill]').forEach(x=>{
+    x.onclick=(ev)=>{
+      ev.stopPropagation();
+      const tag=x.parentElement;
+      const f=state.functions.find(fn=>fn.id===tag.dataset.fid);
+      if(f){ const set=f.selections[tag.dataset.cat]; if(set) set.delete(tag.dataset.item); }
+      render();
+    };
+  });
+
+  // step 6 (thank you)
+  const back5=document.getElementById('backTo5'); if(back5) back5.onclick=()=>goStep(5);
+  const dl=document.getElementById('downloadPdf'); if(dl) dl.onclick=generatePdf;
+}
+
+/* ---------------- PDF generation (html2pdf design) ---------------- */
+function generatePdf(){
+  const c = state.client;
+  const isWedding = c.eventType === 'wedding';
+  const names = isWedding ? `${c.bride || '—'} & ${c.groom || '—'}` : (c.host || '—');
+  const fileName = `${(c.family || 'Client').replace(/\s+/g, '_')}_Wedding_Catering_Booklet.pdf`;
+
+  // Compile Day-wise Menus
+  let functionsHtml = '';
+  state.functions.forEach(f => {
+    let categoriesHtml = '';
+    const cats = categoriesForFunc(f);
+    
+    cats.forEach(cat => {
+      const set = f.selections[cat.key];
+      if (!set || set.size === 0) return;
+      
+      let itemsBullets = '';
+      set.forEach(item => {
+        itemsBullets += `
+          <div class="pdf-item-bullet">
+            <span>${translateFoodItem(item)}</span>
+          </div>
+        `;
+      });
+      
+      const catTitle = txt('cat_' + cat.key) || cat.title;
+      const coverUrl = CATEGORY_COVERS[cat.key] || '/assets/royal_buffet_setup.png';
+      categoriesHtml += `
+        <div class="pdf-category-group" style="page-break-inside: avoid; position: relative; overflow: hidden;">
+          <div class="section-watermark" style="font-size: 32px; color: rgba(124, 58, 76, 0.03) !important;">Udaipur Caterers</div>
+          <div class="pdf-category-banner" style="position: relative; width: 100%; height: 90px; border-radius: 6px; overflow: hidden; margin-bottom: 8px; page-break-after: avoid; background-color: #7C3A4C !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;">
+            <img src="${coverUrl}" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.65);" />
+            <div class="image-watermark mini">Udaipur Caterers</div>
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; padding-left: 15px; box-sizing: border-box;">
+              <span style="font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.6);">${cat.icon} ${catTitle}</span>
+            </div>
+          </div>
+          <div class="pdf-items-list">
+            ${itemsBullets}
+          </div>
+        </div>
+      `;
+    });
+
+    const timeTxt = f.time.size ? [...f.time].map(t => txt('step3_' + t) || t).join(', ') : '';
+    const inlineDate = f.date ? formatDate(f.date) : (state.lang==='en'?'Date not set':'तिथि निर्धारित नहीं है');
+    const guestsPart = f.members ? ` — ${(state.lang==='en'?'Guests: ':'अतिथि: ') + f.members}` : '';
+    const timePart = timeTxt ? ` · ${timeTxt}` : '';
+    const fullTitle = `${translateFuncName(f.name)}${guestsPart}${timePart}`;
+
+    const setupLine = f.setupTheme ? `
+      <div class="pdf-category-group" style="page-break-inside: avoid;">
+        <div class="pdf-category-banner" style="position: relative; width: 100%; height: 90px; border-radius: 6px; overflow: hidden; margin-bottom: 8px; page-break-after: avoid; background-color: #7C3A4C !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;">
+          <img src="/assets/royal_buffet_setup.png" style="width: 100%; height: 100%; object-fit: cover; filter: brightness(0.65);" />
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; padding-left: 15px; box-sizing: border-box;">
+            <span style="font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 700; color: #FFFFFF; text-shadow: 0 1px 3px rgba(0,0,0,0.6);">✨ ${state.lang==='en'?'Setup Theme':'सेटअप थीम'}</span>
+          </div>
+        </div>
+        <div style="font-size: 12px; font-weight: 600; color: #7C3A4C; padding-left: 10px; margin-bottom: 8px;">${f.setupTheme}</div>
+      </div>
+    ` : '';
+
+    if (categoriesHtml !== '' || setupLine !== '') {
+      functionsHtml += `
+        <div class="pdf-function-card">
+          <div class="pdf-function-title">
+            <span>${fullTitle}</span>
+            <span class="date">${inlineDate}</span>
+          </div>
+          ${setupLine}
+          ${categoriesHtml}
+        </div>
+      `;
+    }
+  });
+
+  if (functionsHtml === '') {
+    functionsHtml = `<div class="empty-note">${state.lang==='en'?'No menu items or setups selected for any function.':'किसी भी कार्यक्रम के लिए कोई आइटम या थीम नहीं चुनी गई है।'}</div>`;
+  }
+
+  // Compile overall Services
+  let overallServicesHtml = '';
+  const allServices = [];
+  OTHER_SERVICES.forEach(grp => {
+    grp.items.forEach(([name, emoji]) => {
+      allServices.push(name);
+    });
+  });
+
+  allServices.forEach(s => {
+    const isBooked = state.services.has(s);
+    const badgeText = isBooked 
+      ? (state.lang === 'en' ? '✓ Booked' : '✓ बुक किया गया')
+      : (state.lang === 'en' ? 'Pending' : 'लंबित');
+    const badgeClass = isBooked ? 'pdf-badge-booked' : 'pdf-badge-pending';
+    overallServicesHtml += `
+      <div class="pdf-service-item">
+        <span>${s}</span>
+        <span class="pdf-badge ${badgeClass}">${badgeText}</span>
+      </div>
+    `;
+  });
+
+  // Open new window
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    alert('Popup blocker has blocked the booklet preview page. Please allow popups for this site.');
+    return;
+  }
+
+  // Document contents for the preview tab
+  const htmlContent = `
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <title>Catering Booklet - ${c.family || 'Client'}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Cormorant+Garamond:wght@500;600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  \x3Cscript src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"\x3E\x3C/script\x3E
+  <style>
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+    :root {
+      --rose: #B85C74;
+      --rose-deep: #7C3A4C;
+      --gold: #D8A24B;
+      --gold-light: #EFCB8B;
+      --cream: #FBF1E9;
+      --ivory: #FFFDFB;
+      --line: #EFDCD9;
+      --muted: #93807E;
+    }
+    body {
+      background: #F5EFEB;
+      margin: 0;
+      padding: 40px 20px 100px 20px;
+      font-family: 'Poppins', sans-serif;
+      color: #3A2A2E;
+      display: flex;
+      justify-content: center;
+    }
+    #print-content {
+      background: #FFFDFB;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+      border-radius: 16px;
+      width: 800px;
+      padding: 50px 60px;
+      box-sizing: border-box;
+    }
+    .pdf-print-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: transparent;
+      margin: 0;
+      padding: 0;
+    }
+    .pdf-print-thead {
+      display: table-header-group;
+    }
+    .pdf-print-tbody {
+      display: table-row-group;
+    }
+    .pdf-page-row {
+      page-break-inside: auto;
+    }
+    .pdf-letterhead {
+      border-bottom: 2px solid #D8A24B;
+      padding-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 30px;
+    }
+    .pdf-logo h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      color: #7C3A4C;
+      margin: 0;
+      font-weight: 700;
+    }
+    .pdf-logo p {
+      font-family: 'Poppins', sans-serif;
+      font-size: 10px;
+      color: #D8A24B;
+      letter-spacing: 2px;
+      margin: 6px 0 0 0;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .pdf-logo p::before,
+    .pdf-logo p::after {
+      content: "";
+      flex-grow: 1;
+      height: 1.2px;
+      background: #D8A24B;
+    }
+    .pdf-caterer-details {
+      text-align: right;
+      font-size: 11px;
+      color: #93807E;
+      line-height: 1.5;
+    }
+    .pdf-client-card {
+      background: #7C3A4C;
+      border: 1px solid #7C3A4C;
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 30px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      box-shadow: 0 4px 12px rgba(124, 58, 76, 0.15);
+    }
+    .pdf-client-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: #EFCB8B;
+      grid-column: span 2;
+      margin: 0 0 5px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding-bottom: 8px;
+    }
+    .pdf-detail-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .pdf-detail-item label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #EFCB8B;
+      margin-bottom: 2px;
+      letter-spacing: 0.5px;
+    }
+    .pdf-detail-item span {
+      font-size: 14px;
+      font-weight: 500;
+      color: #FFFFFF;
+    }
+    .pdf-section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: #7C3A4C;
+      border-bottom: 2px solid #D8A24B;
+      padding-bottom: 6px;
+      margin: 25px 0 15px 0;
+    }
+    .pdf-function-card {
+      border: 1px solid #EFDCD9;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 15px;
+      background: #ffffff;
+      page-break-inside: avoid;
+    }
+    .pdf-function-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      color: #7C3A4C;
+      font-weight: 700;
+      margin: 0 0 4px 0;
+      display: flex;
+      justify-content: space-between;
+    }
+    .pdf-function-title span.date {
+      font-size: 12px;
+      color: #93807E;
+      font-family: 'Poppins', sans-serif;
+      font-weight: normal;
+    }
+    .pdf-function-meta {
+      font-size: 11px;
+      color: #93807E;
+      font-style: italic;
+      margin-bottom: 12px;
+    }
+    .pdf-category-group {
+      margin-bottom: 12px;
+    }
+    .pdf-category-title {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #D8A24B;
+      border-bottom: 1px dashed #EFDCD9;
+      padding-bottom: 2px;
+      margin-bottom: 6px;
+      letter-spacing: 0.5px;
+    }
+    .pdf-items-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 15px;
+      padding-left: 10px;
+    }
+    .pdf-item-bullet {
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pdf-item-bullet::before {
+      content: '•';
+      color: #B85C74;
+      font-weight: bold;
+    }
+    .pdf-services-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      page-break-inside: avoid;
+    }
+    .pdf-service-block {
+      border: 1px solid #7C3A4C;
+      border-radius: 8px;
+      padding: 18px 20px;
+      background: #7C3A4C;
+      box-shadow: 0 4px 12px rgba(124, 58, 76, 0.15);
+    }
+    .pdf-service-block h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      color: #EFCB8B;
+      margin: 0 0 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding-bottom: 8px;
+    }
+    .pdf-service-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12.5px;
+      padding: 7px 0;
+      border-bottom: 1px dashed rgba(255,255,255,0.15);
+      color: #ffffff;
+    }
+    .pdf-service-item:last-child {
+      border-bottom: none;
+    }
+    .pdf-badge {
+      font-size: 9.5px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-block;
+    }
+    .pdf-badge-booked {
+      background: #EFCB8B;
+      color: #7C3A4C;
+    }
+    .pdf-badge-pending {
+      background: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.75);
+    }
+    .pdf-print-tfoot {
+      display: table-footer-group;
+    }
+    .pdf-footer-bar {
+      width: 100%;
+      background: #7C3A4C;
+      color: #FFFFFF;
+      font-family: 'Playfair Display', serif;
+      font-size: 11px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      margin-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-sizing: border-box;
+      page-break-inside: avoid;
+    }
+    .pdf-footer-left {
+      font-weight: 500;
+    }
+    .pdf-footer-right {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 10px;
+      opacity: 0.9;
+    }
+    .pdf-blessings-page {
+      text-align: center;
+      padding: 40px 30px;
+      border: 1.5px solid #D8A24B;
+      border-radius: 16px;
+      margin-top: 40px;
+      background: #FBF1E9;
+      page-break-before: always;
+      page-break-inside: avoid;
+    }
+    .pdf-blessings-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: #7C3A4C;
+      margin: 0 0 12px 0;
+      font-weight: 700;
+    }
+    .pdf-blessings-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 15px;
+      color: #7C3A4C;
+      line-height: 1.8;
+      max-width: 580px;
+      margin: 0 auto 24px auto;
+    }
+    .pdf-blessings-signature {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #7C3A4C;
+      display: inline-block;
+      text-align: center;
+      margin: 0 auto;
+    }
+    .pdf-blessings-signature span {
+      font-family: 'Poppins', sans-serif;
+      font-size: 10px;
+      color: #D8A24B;
+      font-weight: 600;
+      margin-top: 6px;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .pdf-blessings-signature span::before,
+    .pdf-blessings-signature span::after {
+      content: "";
+      flex-grow: 1;
+      height: 1.2px;
+      background: #D8A24B;
+      min-width: 15px;
+    }
+    .pdf-designer-credit {
+      font-family: 'Poppins', sans-serif;
+      font-size: 9px;
+      color: #93807E;
+      opacity: 0.8;
+      letter-spacing: 1.2px;
+      margin-top: 24px;
+      text-align: center;
+      width: 100%;
+      font-weight: 500;
+    }
+    
+    /* Fixed Floating action pill container */
+    .print-actions {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 16px;
+      background: rgba(124, 58, 76, 0.85);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      padding: 12px 24px;
+      border-radius: 40px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      z-index: 1000;
+      border: 1px solid rgba(239, 203, 139, 0.3);
+      width: max-content;
+    }
+    .action-btn {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      padding: 10px 24px;
+      border-radius: 30px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+      text-decoration: none;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .print-btn {
+      background: #FFFDFB;
+      color: #7C3A4C;
+    }
+    .print-btn:hover {
+      background: #EFCB8B;
+      color: #7C3A4C;
+      transform: translateY(-1px);
+    }
+    .save-btn {
+      background: linear-gradient(135deg, #D8A24B 0%, #EFCB8B 100%);
+      color: #7C3A4C;
+      box-shadow: 0 4px 12px rgba(216, 162, 75, 0.2);
+    }
+    .save-btn:hover {
+      background: #FFFDFB;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(216, 162, 75, 0.3);
+    }
+    
+    @media (max-width: 840px) {
+      body {
+        padding: 20px 10px 100px 10px;
+      }
+      #print-content {
+        width: 100%;
+        padding: 24px 20px;
+      }
+      .print-actions {
+        width: calc(100% - 40px);
+        justify-content: center;
+        box-sizing: border-box;
+      }
+      .action-btn {
+        flex: 1;
+        font-size: 13px;
+        padding: 10px 12px;
+        justify-content: center;
+      }
+    }
+    
+    @media print {
+      @page {
+        margin: 0.5in 0.4in 0.5in 0.4in;
+      }
+      body {
+        background: #FFFDFB;
+        padding: 0;
+        margin: 0;
+        display: block !important;
+      }
+      #print-content {
+        box-shadow: none;
+        padding: 0;
+        width: 100%;
+        border-radius: 0;
+      }
+      .print-actions {
+        display: none !important;
+      }
+      .pdf-footer-bar {
+        position: fixed !important;
+        bottom: 0.5in !important;
+        left: 0 !important;
+        width: 100% !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        background-color: #7C3A4C !important;
+        color: #FFFFFF !important;
+        z-index: 9999 !important;
+        -webkit-transform: translate3d(0, 0, 0) !important;
+        transform: translate3d(0, 0, 0) !important;
+      }
+    }
+  \x3C/style\x3E
+\x3C/head\x3E
+\x3Cbody\x3E
+
+  <div id="print-content">
+    <table class="pdf-print-table">
+      <thead class="pdf-print-thead">
+        <tr>
+          <td style="border: none; padding: 0;">
+            <!-- Logo & Letterhead -->
+            <div class="pdf-letterhead" style="margin-bottom: 30px;">
+              <div class="pdf-logo">
+                <h1>Udaipur Caterers</h1>
+                <p>SWAAD KA WAADA</p>
+              </div>
+              <div class="pdf-caterer-details">
+                <strong>${CATERER_INFO.name}</strong><br>
+                ${CATERER_INFO.address}<br>
+                Contact: ${CATERER_INFO.phone} | Email: ${CATERER_INFO.email}
+              </div>
+            </div>
+          </td>
+        </tr>
+      </thead>
+      <tbody class="pdf-print-tbody">
+        <tr class="pdf-page-row">
+          <td style="border: none; padding: 0;">
+            <!-- Client Info Card -->
+            <div class="pdf-client-card">
+              <h3>${isWedding ? (state.lang==='en'?'Wedding Catering Proposal':'विवाह कैटरिंग प्रस्ताव') : (state.lang==='en'?'Catering Service Proposal':'कैटरिंग सर्विस प्रस्ताव')}</h3>
+              <div class="pdf-detail-item">
+                <label>${state.lang==='en'?'Family Name':'पारिवारिक नाम'}</label>
+                <span>${c.family || '—'}</span>
+              </div>
+              <div class="pdf-detail-item">
+                <label>${isWedding ? (state.lang==='en'?'Bride & Groom':'दुल्हन और दूल्हा') : (state.lang==='en'?'Host':'आयोजक')}</label>
+                <span>${names}</span>
+              </div>
+              <div class="pdf-detail-item">
+                <label>${state.lang==='en'?'Expected Guests':'अपेक्षित अतिथि'}</label>
+                <span>${computeTotalGuests()} ${state.lang==='en'?'Guests':'अतिथि'}</span>
+              </div>
+              <div class="pdf-detail-item">
+                <label>${isWedding ? (state.lang==='en'?'Wedding Start Date':'विवाह प्रारंभ तिथि') : (state.lang==='en'?'Event Start Date':'कार्यक्रम प्रारंभ तिथि')}</label>
+                <span>${c.startDate ? formatDate(c.startDate) : '—'} (${c.days || '—'} ${state.lang==='en'?'Days':'दिन'})</span>
+              </div>
+              <div class="pdf-detail-item" style="grid-column: span 2;">
+                <label>${state.lang==='en'?'Event Location / Address':'कार्यक्रम का स्थान / पता'}</label>
+                <span>${c.address || '—'}</span>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="pdf-page-row">
+          <td style="border: none; padding: 0;">
+            <!-- Food Itinerary -->
+            <div style="margin-top: 10px;">
+              <h3 class="pdf-section-title">${state.lang==='en'?'I. Custom Food Itinerary (Day-wise)':'I. कस्टम फ़ूड इटिनररी (दिन-वार)'}</h3>
+              ${functionsHtml}
+            </div>
+          </td>
+        </tr>
+        <tr class="pdf-page-row">
+          <td style="border: none; padding: 0;">
+            <!-- Services & Setup -->
+            <div style="margin-top: 30px;">
+              <h3 class="pdf-section-title">${state.lang==='en'?'II. Theme Setups & Services':'II. थीम सेटअप और सेवाएँ'}</h3>
+              <div class="pdf-services-grid">
+                <div class="pdf-service-block">
+                  <h4>${state.lang==='en'?'Catering Arrangements & Service Log':'कैटरिंग व्यवस्था और सेवा लॉग'}</h4>
+                  ${overallServicesHtml}
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="pdf-page-row">
+          <td style="border: none; padding: 0;">
+            <!-- Blessings -->
+            <div class="pdf-blessings-page">
+              ${(c.eventType === 'wedding' || c.eventType === 'anniversary') ? `
+                <h4 class="pdf-blessings-title">${state.lang==='en'?'Shubhkamnaen & Blessings':'शुभकामनाएं एवं आशीर्वाद'}</h4>
+                <p class="pdf-blessings-text" style="margin-bottom: 24px;">
+                  "Mangalam Bhagwan Vishnu, Mangalam Garunadhwaja,<br>
+                  Mangalam Pundari Kaksho, Mangalaya Tano Hari."<br><br>
+                  ${state.lang==='en'?'We pray that your lives together are filled with love and sweetness.':'हम प्रार्थना करते हैं कि आपका जीवन प्रेम और मिठास से भरा रहे।'}
+                </p>
+              ` : ''}
+              <p class="pdf-blessings-text" style="font-size: 16px; font-weight: 800; color: #7C3A4C; max-width: 600px; margin: 0 auto 24px auto; font-style: normal;">
+                <strong>${state.lang==='en'?'Thank you for choosing Udaipur Caterers. We add flavor and sweetness to your celebrations!':'उदयपुर कैटरर्स को चुनने के लिए धन्यवाद। हम आपके उत्सवों में स्वाद और मिठास जोड़ते हैं!'}</strong>
+              </p>
+              <div class="pdf-blessings-signature">
+                Udaipur Caterers
+                <span>SWAAD KA WAADA</span>
+              </div>
+              <div class="pdf-designer-credit">
+                Design by: Harshit &bull; Digi18Studio
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Fixed Footer -->
+    <div class="pdf-footer-bar" style="background-color: #7C3A4C !important; color: #FFFFFF !important;">
+      <div class="pdf-footer-left">
+        ${state.lang==='en'?'Thank you for choosing Udaipur Caterers':'उदयपुर कैटरर्स चुनने के लिए धन्यवाद'}
+      </div>
+      <div class="pdf-footer-right">
+        <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; vertical-align:middle;">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+          <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+        </svg>
+        <span>@udaipur_caterers</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating bottom action bar -->
+  <div class="print-actions">
+    <button class="action-btn print-btn" onclick="window.print()">🖨️ Print Booklet</button>
+    <button class="action-btn save-btn" id="savePdfBtn">💾 Save PDF</button>
+  </div>
+
+  \x3Cscript\x3E
+    document.getElementById('savePdfBtn').onclick = function() {
+      const element = document.getElementById('print-content');
+      const opt = {
+        margin:       [0.4, 0.4, 0.4, 0.4],
+        filename:     '${fileName}',
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2, useCORS: true, logging: false },
+        jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+      };
+      
+      const saveBtn = document.getElementById('savePdfBtn');
+      const originalText = saveBtn.innerHTML;
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '⌛ Saving...';
+      
+      html2pdf()
+        .set(opt)
+        .from(element)
+        .save()
+        .then(() => {
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = originalText;
+        })
+        .catch(err => {
+          console.error(err);
+          saveBtn.disabled = false;
+          saveBtn.innerHTML = originalText;
+          alert('PDF generation failed. Please try printing to PDF instead.');
+        });
+    };
+  \x3C/script\x3E
+\x3C/body\x3E
+\x3C/html\x3E
+  `;
+
+  printWindow.document.write(htmlContent);
+  printWindow.document.close();
+}
+
+// Initial Boot Render
+render();
+</script>
+</body>
+</html>
