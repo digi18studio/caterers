@@ -374,22 +374,22 @@ window.FOOD_TRANSLATIONS = {
 
 window.getCategoryBanner = function(key) {
   const mapping = {
-    breakfast: '/assets/header_nashta.jpg',
-    soup: '/assets/header_soup.jpg',
-    sabji: '/assets/header_main course-sabji.png',
-    roti: '/assets/header_roti.jpg',
-    pulav: '/assets/header_rice.jpg',
-    punjabi: '/assets/header_punjabi.jpg',
-    south: '/assets/header_south_indian.jpg',
-    rajasthani: '/assets/header_rajasthani.jpg',
-    liveSabji: '/assets/header_live sabji.jpg',
-    live: '/assets/header_extra counter live.jpg',
-    mithai: '/assets/header_mithai.jpg',
-    drinks: '/assets/header_cocktail.jpg',
-    mahilaSangeet: '/assets/header_nashta.jpg',
-    funcSpecial: '/assets/header_function special.jpg',
-    paan: '/assets/header_mukhwas.jpg',
-    fruits: '/assets/header_fruits.jpg'
+    breakfast: 'assets/header_nashta.jpg',
+    soup: 'assets/header_soup.jpg',
+    sabji: 'assets/header_main course-sabji.png',
+    roti: 'assets/header_roti.jpg',
+    pulav: 'assets/header_rice.jpg',
+    punjabi: 'assets/header_punjabi.jpg',
+    south: 'assets/header_south_indian.jpg',
+    rajasthani: 'assets/header_rajasthani.jpg',
+    liveSabji: 'assets/header_live sabji.jpg',
+    live: 'assets/header_extra counter live.jpg',
+    mithai: 'assets/header_mithai.jpg',
+    drinks: 'assets/header_cocktail.jpg',
+    mahilaSangeet: 'assets/header_nashta.jpg',
+    funcSpecial: 'assets/header_function special.jpg',
+    paan: 'assets/header_mukhwas.jpg',
+    fruits: 'assets/header_fruits.jpg'
   };
-  return mapping[key] || '/assets/royal_buffet_setup.png';
+  return mapping[key] || 'assets/royal_buffet_setup.png';
 };

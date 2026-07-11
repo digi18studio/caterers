@@ -6,7 +6,7 @@
   <title>Udaipur Caterers — Digital Menu Card</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Cormorant+Garamond:wght@500;600;700&family=Marcellus+SC&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <script src="/data.js"></script>
+  <script src="data.js"></script>
   <style>
     :root {
       --rose: #B85C74;
@@ -627,7 +627,7 @@
       <button class="lang-toggle-btn" id="langToggle">English</button>
       <div class="logo-wrapper">
         <div class="logo-circle">
-          <img src="/assets/Logo/chef-svgrepo-color.svg" alt="Chef Logo">
+          <img src="assets/Logo/chef-svgrepo-color.svg" alt="Chef Logo">
         </div>
         <h1>Udaipur Caterers</h1>
         <div class="tagline">SWAAD KA WAADA</div>
@@ -710,17 +710,17 @@
         <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
         <path d="M6 1v3M10 1v3M14 1v3"/>
       </svg>`,
-      soup: '/assets/Icons/icon_soup.svg',
-      sabji: '/assets/Icons/icon_main-course-sabji.svg',
-      roti: '/assets/Icons/icon_roti.svg',
-      pulav: '/assets/Icons/icon_pulav.svg',
-      punjabi: '/assets/Icons/icon_punjabi.svg',
-      south: '/assets/Icons/icon_south-indian.svg',
-      rajasthani: '/assets/Icons/icon_rajasthani.svg',
-      liveSabji: '/assets/Icons/icon_main-course-live sabjiya.svg',
-      live: '/assets/Icons/icon_extra-counter-live.svg',
-      mithai: '/assets/Icons/icon_mithai.svg',
-      drinks: '/assets/Icons/icon_mocktails.svg',
+      soup: 'assets/Icons/icon_soup.svg',
+      sabji: 'assets/Icons/icon_main-course-sabji.svg',
+      roti: 'assets/Icons/icon_roti.svg',
+      pulav: 'assets/Icons/icon_pulav.svg',
+      punjabi: 'assets/Icons/icon_punjabi.svg',
+      south: 'assets/Icons/icon_south-indian.svg',
+      rajasthani: 'assets/Icons/icon_rajasthani.svg',
+      liveSabji: 'assets/Icons/icon_main-course-live sabjiya.svg',
+      live: 'assets/Icons/icon_extra-counter-live.svg',
+      mithai: 'assets/Icons/icon_mithai.svg',
+      drinks: 'assets/Icons/icon_mocktails.svg',
       mahilaSangeet: `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M9 18V5l12-2v13"/>
         <circle cx="6" cy="18" r="3"/>
@@ -731,14 +731,14 @@
         <path d="M8 5v3M12 4v4M16 5v3"/>
         <circle cx="12" cy="13" r="1.5"/>
       </svg>`,
-      paan: '/assets/Icons/icon_paan.svg',
-      fruits: '/assets/Icons/icon_fruit.svg'
+      paan: 'assets/Icons/icon_paan.svg',
+      fruits: 'assets/Icons/icon_fruit.svg'
     };
 
     function getCategoryIconHtml(key, fallbackEmoji, extraClass = 'filter-btn-emoji') {
       const svg = CATEGORY_SVGS[key];
       if (!svg) return `<span class="${extraClass}">${fallbackEmoji}</span>`;
-      if (svg.startsWith('/') || svg.startsWith('./')) {
+      if (svg.startsWith('assets/')) {
         return `<img src="${svg}" class="${extraClass}" style="width:18px; height:18px; display:inline-block; vertical-align:middle; object-fit:contain;" alt="${key}">`;
       }
       return `<span class="${extraClass}" style="width:18px; height:18px; display:inline-block; vertical-align:middle; line-height:1;">${svg}</span>`;
@@ -754,34 +754,34 @@
     // SETUP CATEGORIES DATA (Optimized JPEGs, native column masonry layout)
     const SETUP_CATEGORIES = [
       { key: 'all', title: 'All Setup', titleHi: 'सभी सेटअप', icon: '🌟', imgs: [
-        '/assets/Setup/Setup golden/setup_golden.jpg', '/assets/Setup/Setup golden/setup_golden2.jpg', '/assets/Setup/Setup golden/setup_golden3.webp', '/assets/Setup/Setup golden/setup_golden4.jpg', '/assets/Setup/Setup golden/setup_golden5.jpg', '/assets/Setup/Setup golden/setup_golden6.jpg', '/assets/Setup/Setup golden/setup_golden7.jpg', '/assets/Setup/Setup golden/setup_golden8.jpg',
-        '/assets/Setup/Setup light/setup_light.jpg', '/assets/Setup/Setup light/setup_light2.jpg', '/assets/Setup/Setup light/setup_light3.JPG', '/assets/Setup/Setup light/setup_light4.jpg', '/assets/Setup/Setup light/setup_light5.jpg', '/assets/Setup/Setup light/setup_light6.jpg',
-        '/assets/Setup/Setup glass/setup_glass.jpg', '/assets/Setup/Setup glass/setup_glass2.jpg',
-        '/assets/Setup/Setup white/setup_white.jpg', '/assets/Setup/Setup white/setup_white2.jpg', '/assets/Setup/Setup white/setup_white3.jpg', '/assets/Setup/Setup white/setup_white4.jpg', '/assets/Setup/Setup white/setup_white5.jpg', '/assets/Setup/Setup white/setup_white6.jpg',
-        '/assets/Setup/Setup bajot/setup_bajot.jpg', '/assets/Setup/Setup bajot/setup_bajot2.jpg', '/assets/Setup/Setup bajot/setup_bajot3.jpg', '/assets/Setup/Setup bajot/setup_bajot4.jpg',
-        '/assets/Setup/Setup frills/setup_frills.jpg', '/assets/Setup/Setup frills/setup_frills3.jpg', '/assets/Setup/Setup frills/setup_frills4.webp', '/assets/Setup/Setup frills/setup_frills5.jpg',
-        '/assets/Setup/Setup counter/setup_counter.jpg'
+        'assets/Setup/Setup golden/setup_golden.jpg', 'assets/Setup/Setup golden/setup_golden2.jpg', 'assets/Setup/Setup golden/setup_golden3.webp', 'assets/Setup/Setup golden/setup_golden4.jpg', 'assets/Setup/Setup golden/setup_golden5.jpg', 'assets/Setup/Setup golden/setup_golden6.jpg', 'assets/Setup/Setup golden/setup_golden7.jpg', 'assets/Setup/Setup golden/setup_golden8.jpg',
+        'assets/Setup/Setup light/setup_light.jpg', 'assets/Setup/Setup light/setup_light2.jpg', 'assets/Setup/Setup light/setup_light3.JPG', 'assets/Setup/Setup light/setup_light4.jpg', 'assets/Setup/Setup light/setup_light5.jpg', 'assets/Setup/Setup light/setup_light6.jpg',
+        'assets/Setup/Setup glass/setup_glass.jpg', 'assets/Setup/Setup glass/setup_glass2.jpg',
+        'assets/Setup/Setup white/setup_white.jpg', 'assets/Setup/Setup white/setup_white2.jpg', 'assets/Setup/Setup white/setup_white3.jpg', 'assets/Setup/Setup white/setup_white4.jpg', 'assets/Setup/Setup white/setup_white5.jpg', 'assets/Setup/Setup white/setup_white6.jpg',
+        'assets/Setup/Setup bajot/setup_bajot.jpg', 'assets/Setup/Setup bajot/setup_bajot2.jpg', 'assets/Setup/Setup bajot/setup_bajot3.jpg', 'assets/Setup/Setup bajot/setup_bajot4.jpg',
+        'assets/Setup/Setup frills/setup_frills.jpg', 'assets/Setup/Setup frills/setup_frills3.jpg', 'assets/Setup/Setup frills/setup_frills4.webp', 'assets/Setup/Setup frills/setup_frills5.jpg',
+        'assets/Setup/Setup counter/setup_counter.jpg'
       ]},
       { key: 'golden', title: 'Golden Setup', titleHi: 'गोल्डन सेटअप', icon: '⚜️', imgs: [
-        '/assets/Setup/Setup golden/setup_golden.jpg', '/assets/Setup/Setup golden/setup_golden2.jpg', '/assets/Setup/Setup golden/setup_golden3.webp', '/assets/Setup/Setup golden/setup_golden4.jpg', '/assets/Setup/Setup golden/setup_golden5.jpg', '/assets/Setup/Setup golden/setup_golden6.jpg', '/assets/Setup/Setup golden/setup_golden7.jpg', '/assets/Setup/Setup golden/setup_golden8.jpg'
+        'assets/Setup/Setup golden/setup_golden.jpg', 'assets/Setup/Setup golden/setup_golden2.jpg', 'assets/Setup/Setup golden/setup_golden3.webp', 'assets/Setup/Setup golden/setup_golden4.jpg', 'assets/Setup/Setup golden/setup_golden5.jpg', 'assets/Setup/Setup golden/setup_golden6.jpg', 'assets/Setup/Setup golden/setup_golden7.jpg', 'assets/Setup/Setup golden/setup_golden8.jpg'
       ]},
       { key: 'light', title: 'Light Setup', titleHi: 'लाइट सेटअप', icon: '💡', imgs: [
-        '/assets/Setup/Setup light/setup_light.jpg', '/assets/Setup/Setup light/setup_light2.jpg', '/assets/Setup/Setup light/setup_light3.JPG', '/assets/Setup/Setup light/setup_light4.jpg', '/assets/Setup/Setup light/setup_light5.jpg', '/assets/Setup/Setup light/setup_light6.jpg'
+        'assets/Setup/Setup light/setup_light.jpg', 'assets/Setup/Setup light/setup_light2.jpg', 'assets/Setup/Setup light/setup_light3.JPG', 'assets/Setup/Setup light/setup_light4.jpg', 'assets/Setup/Setup light/setup_light5.jpg', 'assets/Setup/Setup light/setup_light6.jpg'
       ]},
       { key: 'glass', title: 'Glass Setup', titleHi: 'ग्लास सेटअप', icon: '💎', imgs: [
-        '/assets/Setup/Setup glass/setup_glass.jpg', '/assets/Setup/Setup glass/setup_glass2.jpg'
+        'assets/Setup/Setup glass/setup_glass.jpg', 'assets/Setup/Setup glass/setup_glass2.jpg'
       ]},
       { key: 'white', title: 'White Setup', titleHi: 'व्हाइट सेटअप', icon: '⚪', imgs: [
-        '/assets/Setup/Setup white/setup_white.jpg', '/assets/Setup/Setup white/setup_white2.jpg', '/assets/Setup/Setup white/setup_white3.jpg', '/assets/Setup/Setup white/setup_white4.jpg', '/assets/Setup/Setup white/setup_white5.jpg', '/assets/Setup/Setup white/setup_white6.jpg'
+        'assets/Setup/Setup white/setup_white.jpg', 'assets/Setup/Setup white/setup_white2.jpg', 'assets/Setup/Setup white/setup_white3.jpg', 'assets/Setup/Setup white/setup_white4.jpg', 'assets/Setup/Setup white/setup_white5.jpg', 'assets/Setup/Setup white/setup_white6.jpg'
       ]},
       { key: 'bajot', title: 'Bajot Sitting Setup', titleHi: 'बाजोट सिटिंग सेटअप', icon: '🛋️', imgs: [
-        '/assets/Setup/Setup bajot/setup_bajot.jpg', '/assets/Setup/Setup bajot/setup_bajot2.jpg', '/assets/Setup/Setup bajot/setup_bajot3.jpg', '/assets/Setup/Setup bajot/setup_bajot4.jpg'
+        'assets/Setup/Setup bajot/setup_bajot.jpg', 'assets/Setup/Setup bajot/setup_bajot2.jpg', 'assets/Setup/Setup bajot/setup_bajot3.jpg', 'assets/Setup/Setup bajot/setup_bajot4.jpg'
       ]},
       { key: 'frills', title: 'Frills', titleHi: 'फ्रिल्स सेटअप', icon: '🎗️', imgs: [
-        '/assets/Setup/Setup frills/setup_frills.jpg', '/assets/Setup/Setup frills/setup_frills3.jpg', '/assets/Setup/Setup frills/setup_frills4.webp', '/assets/Setup/Setup frills/setup_frills5.jpg'
+        'assets/Setup/Setup frills/setup_frills.jpg', 'assets/Setup/Setup frills/setup_frills3.jpg', 'assets/Setup/Setup frills/setup_frills4.webp', 'assets/Setup/Setup frills/setup_frills5.jpg'
       ]},
       { key: 'counter', title: 'Only Table Counter', titleHi: 'सिर्फ टेबल काउंटर', icon: '🍽️', imgs: [
-        '/assets/Setup/Setup counter/setup_counter.jpg'
+        'assets/Setup/Setup counter/setup_counter.jpg'
       ]}
     ];
 
